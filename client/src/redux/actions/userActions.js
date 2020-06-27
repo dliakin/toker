@@ -1,0 +1,26 @@
+import { LOGIN_API, LOGOUT, REGISTER_API, UPDATE_USER_DATA_API, CHECK_PAY_API } from "../types"
+
+export const login = (form) => ({
+    type: LOGIN_API,
+    form,
+})
+
+export const register = (form) => ({
+    type: REGISTER_API,
+    form,
+})
+
+export const logout = () => ({
+    type: LOGOUT,
+})
+
+export const updateUserData = (form, token) => ({
+    type: UPDATE_USER_DATA_API,
+    form,
+    token
+})
+
+export const checkPay = (token) => ({
+    type: CHECK_PAY_API,
+    token
+})
