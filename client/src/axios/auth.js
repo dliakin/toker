@@ -1,7 +1,15 @@
 import axios from "axios"
 
+var baseURL = 'http://localhost:5000/api/auth'
+
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    baseURL = 'http://localhost:5000/api/auth'
+} else {
+    baseURL = 'http://toker.team/api/auth'
+}
+
 const instance = axios.create({
-    baseURL: 'http://localhost:5000/api/auth',
+    baseURL,
 });
 
 instance.interceptors.response.use(function (response) {
