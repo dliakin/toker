@@ -7,7 +7,6 @@ import User from './pages/User'
 import Feed from './pages/Feed'
 import NewDetail from './pages/NewDetail'
 import SuccessPay from './pages/SuccessPay'
-import Landing from './pages/Landing'
 import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
 
