@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT, REGISTER, UPDATE_USER_DATA, CHECK_PAY,NEED_PAY } from "../types"
+import { LOGIN, LOGOUT, REGISTER, UPDATE_USER_DATA, CHECK_PAY, NEED_PAY } from "../types"
 
 const initialState = {
     userId: null,
@@ -13,7 +13,7 @@ export const userReducer = (state = initialState, action) => {
         case REGISTER:
             return { ...state, userId: action.payload.userId, token: action.payload.token }
         case LOGOUT:
-            return { ...state, userId: null, token: null }
+            return { ...state, userId: null, token: null, email: null, needPay: false }
         case UPDATE_USER_DATA:
             return { ...state, email: action.email }
         case CHECK_PAY:

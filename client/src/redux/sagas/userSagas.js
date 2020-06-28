@@ -32,21 +32,21 @@ function* checkPaySaga(action) {
 }
 
 async function register(form) {
-    const data = await AuthApi.register({ ...form });
+    const data = await AuthApi.register({ ...form })
     return data
 }
 
 async function login(form) {
-    const data = await AuthApi.login({ ...form });
+    const data = await AuthApi.login({ ...form })
     return data
 }
 
 async function updateUserData(form, token) {
-    const data = await AuthApi.updateUserData({ ...form }, token);
+    const data = await AuthApi.updateUserData({ ...form }, token)
     return data
 }
 
 async function checkPay(token) {
-    const data = await PayApi.checkPay(token);
+    const data = await PayApi.checkPay(token)
     return data
 }

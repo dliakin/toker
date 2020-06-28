@@ -2,12 +2,14 @@ import React from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import Accaunts from './pages/Accaunts'
 import AccauntDetail from './pages/AccauntDetail'
-import AuthPage from './pages/AuthPage'
 import Plans from './pages/Plans'
 import User from './pages/User'
 import Feed from './pages/Feed'
 import NewDetail from './pages/NewDetail'
 import SuccessPay from './pages/SuccessPay'
+import Landing from './pages/Landing'
+import SignUp from './pages/SignUp'
+import SignIn from './pages/SignIn'
 
 export const useRoutes = (isAuthenticated, needPay) => {
     if (isAuthenticated) {
@@ -53,9 +55,15 @@ export const useRoutes = (isAuthenticated, needPay) => {
     return (
         <Switch>
             <Route path="/" exact>
-                <AuthPage />
+                <Landing />
             </Route>
-            <Redirect to="/" />
+            <Route path="/signup" exact>
+                <SignUp />
+            </Route>
+            <Route path="/signin" exact>
+                <SignIn />
+            </Route>
+            <Redirect to="/signin" />
         </Switch>
     )
 }

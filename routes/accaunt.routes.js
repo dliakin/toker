@@ -100,7 +100,7 @@ router.get(
                 }]
             })
 
-            if(!accaunt){
+            if (!accaunt) {
                 return res.status(404).json({ message: `Аккаунт не найден` })
             }
 
