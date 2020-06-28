@@ -7,7 +7,6 @@ import User from './pages/User'
 import Feed from './pages/Feed'
 import NewDetail from './pages/NewDetail'
 import SuccessPay from './pages/SuccessPay'
-import Landing from './pages/Landing'
 import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
 
@@ -55,7 +54,7 @@ export const useRoutes = (isAuthenticated, needPay) => {
     return (
         <Switch>
             <Route path="/" exact>
-                <Landing />
+                <SignIn />
             </Route>
             <Route path="/signup" exact>
                 <SignUp />
@@ -63,7 +62,7 @@ export const useRoutes = (isAuthenticated, needPay) => {
             <Route path="/signin" exact>
                 <SignIn />
             </Route>
-            <Redirect to="/signin" />
+            <Redirect to="/" />
         </Switch>
     )
 }
