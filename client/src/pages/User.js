@@ -3,6 +3,7 @@ import { updateUserData } from '../redux/actions/userActions'
 import { connect } from 'react-redux'
 import { TextField, Container, Typography, Card, CardContent, CardActions, Button, makeStyles } from '@material-ui/core'
 import AuthApi from '../axios/auth'
+import TelegramLoginButton from 'react-telegram-login'
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -26,6 +27,10 @@ const User = ({ user, updateUserData }) => {
 
     const changeHandler = event => {
         setForm({ ...form, [event.target.name]: event.target.value })
+    }
+
+    const handleTelegramResponse = response => {
+        console.log(response)
     }
 
     useEffect(() => {
@@ -118,7 +123,15 @@ const User = ({ user, updateUserData }) => {
                     </Typography>
                 </CardContent>
             </Card>}
-        </Container>
+            <Card className={classes.sub}>
+                <Typography>
+                    Доступ в телеграм
+                </Typography>
+                <CardContent>
+                    <TelegramLoginButton dataOnauth={handleTelegramResponse} botName="tokerteambot" />
+                </CardContent>
+            </Card>
+        </Container >
     )
 }
 
