@@ -30,9 +30,9 @@ const User = ({ user, updateUserData }) => {
     }
 
     const handleTelegramResponse = async response => {
-        await AuthApi.telegramLogin(response)
+        await AuthApi.telegramLogin(response, user.token)
         console.log(response)
-        
+
     }
 
     useEffect(() => {
