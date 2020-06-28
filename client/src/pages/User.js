@@ -29,8 +29,10 @@ const User = ({ user, updateUserData }) => {
         setForm({ ...form, [event.target.name]: event.target.value })
     }
 
-    const handleTelegramResponse = response => {
+    const handleTelegramResponse = async response => {
+        await AuthApi.telegramLogin(response)
         console.log(response)
+        
     }
 
     useEffect(() => {

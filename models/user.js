@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = function (models) {
     User.belongsToMany(models.Accaunt, { through: 'UserAccaunt' })
     User.hasMany(models.Pay, {foreignKey: 'userId'})
+    User.hasOne(models.TelegramUser, {foreignKey: 'userId'})
   }
   return User
 };
