@@ -130,7 +130,9 @@ const User = ({ user, updateUserData }) => {
                     Доступ в телеграм
                 </Typography>
                 <CardContent>
-                    <TelegramLoginButton dataOnauth={handleTelegramResponse} botName="tokerteambot" />
+                    {userData.tgUser ? <Typography>Логин в телеграм: {userData.tgUser}</Typography>
+                        : <TelegramLoginButton dataOnauth={handleTelegramResponse} botName="tokerteambot" />
+                    }
                 </CardContent>
             </Card>
         </Container >
