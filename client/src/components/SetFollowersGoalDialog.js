@@ -47,6 +47,7 @@ const SetFollowersGoalDialog = ({ open, onClose, token, accaunt_id, setFollowers
                     id="goal"
                     label="Количество подписчиков"
                     fullWidth
+                    type="number"
                     onChange={handleChange} />
             </DialogContent>
             <DialogActions>
