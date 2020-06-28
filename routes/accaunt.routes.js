@@ -34,6 +34,15 @@ router.post(
                     verified: accauntData.verified,
                     active: 1
                 })
+                const newAccauntData = await TikTokScraper.getUserProfileInfo(accaunt.uniqueId)
+                accauntData = await models.AccauntData.create({
+                    accauntId: accaunt.id,
+                    following: newAccauntData.following,
+                    fans: newAccauntData.fans,
+                    heart: newAccauntData.heart,
+                    video: newAccauntData.video,
+                    digg: newAccauntData.digg,
+                })
             }
 
             var userAccaunt = await models.UserAccaunt.findOne({
@@ -141,10 +150,10 @@ router.get(
                     prev_date = created_at
                 } else {
                     delta = prev_fans - fans
-                    return_data.push({ date: moment(prev_date).format('YYYY-MM-DD HH:00:00'), fans: prev_fans, delta: delta })
                     prev_fans = fans
                     prev_date = created_at
                 }
+                return_data.push({ date: moment(prev_date).format('YYYY-MM-DD HH:00:00'), fans: prev_fans, delta: delta })
             })
 
 
@@ -154,7 +163,6 @@ router.get(
             }
 
             accaunt.data = return_data
-
             res.json(accaunt)
         } catch (error) {
             res.status(500).json({ message: `Что-то пошло не так, попробуйте снова` })
