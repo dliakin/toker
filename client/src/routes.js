@@ -55,7 +55,7 @@ export const useRoutes = (isAuthenticated, needPay) => {
     return (
         <Switch>
             <Route path="/" exact>
-                <Landing />
+                <SignIn />
             </Route>
             <Route path="/signup" exact>
                 <SignUp />
