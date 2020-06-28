@@ -30,8 +30,8 @@ const User = ({ user, updateUserData }) => {
     }
 
     const handleTelegramResponse = async response => {
-        await AuthApi.telegramLogin(response, user.token)
-        console.log(response)
+        const data = await AuthApi.telegramLogin(response, user.token)
+        setUserData({ ...setUserData, tgUser: data.tgUser })
 
     }
 
