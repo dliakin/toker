@@ -125,7 +125,7 @@ const User = ({ user, updateUserData }) => {
                     </Typography>
                 </CardContent>
             </Card>}
-            <Card className={classes.sub}>
+            {userData && <Card className={classes.sub}>
                 <Typography>
                     Доступ в телеграм
                 </Typography>
@@ -134,7 +134,7 @@ const User = ({ user, updateUserData }) => {
                         : <TelegramLoginButton dataOnauth={handleTelegramResponse} botName="tokerteambot" />
                     }
                 </CardContent>
-            </Card>
+            </Card>}
         </Container >
     )
 }
