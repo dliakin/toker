@@ -27,14 +27,14 @@ const useStyles = makeStyles((theme) => ({
 
 const Accaunts = ({ accaunts, loadAccaunts, token, clearAccaunt, deleteAccaunt }) => {
     const [open, setOpen] = useState(false);
-    const classes = useStyles();
+    const classes = useStyles()
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
     const handleClose = () => {
-        setOpen(false);
+        setOpen(false)
     };
 
     const handleDelete = (id) => () => {

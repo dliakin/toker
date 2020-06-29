@@ -5,7 +5,7 @@ var baseURL = 'http://localhost:5000/api/plan'
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     baseURL = 'http://localhost:5000/api/plan'
 } else {
-    baseURL = 'http://toker.team/api/plan'
+    baseURL = 'https://toker.team/api/plan'
 }
 
 const instance = axios.create({

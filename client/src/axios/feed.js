@@ -5,7 +5,7 @@ var baseURL = 'http://localhost:5000/api/feed'
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     baseURL = 'http://localhost:5000/api/feed'
 } else {
-    baseURL = 'http://toker.team/api/feed'
+    baseURL = 'https://toker.team/api/feed'
 }
 
 const instance = axios.create({
