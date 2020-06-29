@@ -2,10 +2,14 @@ const express = require('express')
 const config = require('config')
 const path = require('path')
 const cors = require('cors')
+const http = require('http')
+const https = require('https')
 const CronJob = require('cron').CronJob
 const TikTokScraper = require('tiktok-scraper')
+const fs = require('fs')
 const models = require('./models')
 
+httpApp = express()
 const app = express()
 
 app.use(cors())
@@ -58,5 +62,29 @@ async function start() {
 }
 
 start()
+if (process.env.NODE_ENV === 'production') {
+    const privateKey = fs.readFileSync('/etc/letsencrypt/live/toker.team/privkey.pem', 'utf8')
+    const certificate = fs.readFileSync('/etc/letsencrypt/live/toker.team/cert.pem', 'utf8')
+    const ca = fs.readFileSync('/etc/letsencrypt/live/toker.team/chain.pem', 'utf8')
+    const credentials = {
+        key: privateKey,
+        cert: certificate,
+        ca: ca
+    }
 
-app.listen(PORT, () => console.log(`App has been started on port ${PORT}...`))
+    httpApp.set('port', PORT || 80)
+    httpApp.get("*", function (req, res, next) {
+        res.redirect("https://" + req.headers.host + "/" + req.path);
+    })
+
+    http.createServer(httpApp).listen(httpApp.get('port'), function () {
+        console.log('Express HTTP server listening on port ' + httpApp.get('port'));
+    });
+
+    https.createServer(credentials, app).listen(443, function () {
+        console.log('Express HTTPS server listening on port 443...');
+    });
+
+} else {
+    app.listen(PORT, () => console.log(`App has been started on port ${PORT}...`))
+}
