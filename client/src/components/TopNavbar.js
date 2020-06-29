@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { AccountCircle } from '@material-ui/icons'
 import { Menu, MenuItem } from '@material-ui/core'
 import { Link } from 'react-router-dom'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,7 +31,7 @@ const TopNavbar = ({ logout }) => {
     const history = useHistory()
     let location = useLocation()
     const [anchorEl, setAnchorEl] = useState(null)
-  
+
     const isMenuOpen = Boolean(anchorEl);
 
     const logoutHandler = event => {
@@ -44,32 +45,41 @@ const TopNavbar = ({ logout }) => {
 
     const handleMenuClose = () => {
         setAnchorEl(null)
-      }
+    }
 
     const menuId = 'primary-search-account-menu'
     const renderMenu = (
         <Menu
-          anchorEl={anchorEl}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          id={menuId}
-          keepMounted
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          open={isMenuOpen}
-          onClose={handleMenuClose}
+            anchorEl={anchorEl}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            id={menuId}
+            keepMounted
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            open={isMenuOpen}
+            onClose={handleMenuClose}
         >
-          <MenuItem component={Link} to="/user" onClick={handleMenuClose}>Профиль</MenuItem>
-          <MenuItem onClick={logoutHandler}>Выйти</MenuItem>
+            <MenuItem component={Link} to="/user" onClick={handleMenuClose}>Профиль</MenuItem>
+            <MenuItem onClick={logoutHandler}>Выйти</MenuItem>
         </Menu>
-      )
+    )
 
     let headerText = ''
+    let pathname = ''
     if (location) {
-        switch (location.pathname) {
+        if (location.pathname.includes('/accaunt/')) {
+            pathname = '/accaunt'
+        } else {
+            pathname = location.pathname
+        }
+        switch (pathname) {
             case '/feed':
                 headerText = 'Лента'
                 break
             case '/accaunts':
                 headerText = 'Аккаунты'
+                break
+            case '/accaunt':
+                headerText = 'Статистика'
                 break
             case '/user':
                 headerText = 'Настройки'
@@ -83,9 +93,15 @@ const TopNavbar = ({ logout }) => {
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                    {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                        <MenuIcon />
-                    </IconButton> */}
+                    {pathname === '/accaunt' && <IconButton
+                        edge="start"
+                        className={classes.menuButton}
+                        color="inherit"
+                        aria-label="menu"
+                        onClick={history.goBack}
+                    >
+                        <ArrowBackIosIcon />
+                    </IconButton>}
                     <Typography variant="h6" className={classes.title}>
                         {headerText}
                     </Typography>

@@ -1,7 +1,8 @@
 const { Router } = require('express')
-const models = require('../models')
 const { QueryTypes } = require('sequelize')
+const models = require('../models')
 const auth = require('../middleware/auth.middleware')
+
 const router = Router()
 
 router.get(
@@ -36,6 +37,7 @@ router.get(
 
             res.json(news)
         } catch (error) {
+            console.log(error)
             res.status(500).json({ message: `Что-то пошло не так, попробуйте снова` })
         }
     })

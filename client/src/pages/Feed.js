@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { loadNews } from '../redux/actions/feedActions'
+import moment from 'moment-timezone'
 import { connect, useDispatch } from 'react-redux'
 import { Container, Typography, Card, CardActionArea, CardHeader, CardContent, makeStyles, LinearProgress } from '@material-ui/core'
 import { Link } from 'react-router-dom'
+import { loadNews } from '../redux/actions/feedActions'
 import FeedApi from '../axios/feed'
 import { logout } from '../redux/actions/userActions'
 
@@ -44,6 +45,7 @@ const Feed = ({ token }) => {
                             <CardHeader
                                 title={row.title}
                                 titleTypographyProps={{ variant: 'body2' }}
+                                subheader={moment(row.createdAt).format('YYYY-MM-DD HH:mm')}
                             >
                             </CardHeader>
                             <CardContent>

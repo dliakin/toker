@@ -32,7 +32,7 @@ var saveStats = new CronJob('0 0 */1 * * *', async function () {
             }
         })
         accaunts.forEach(async accaunt => {
-            const newAccauntData = await TikTokScraper.getUserProfileInfo(accaunt.uniqueId)
+            const newAccauntData = await TikTokScraper.getUserProfileInfo(accaunt.uniqueId, { proxy: config.get('proxy') })
             accauntData = await models.AccauntData.create({
                 accauntId: accaunt.id,
                 following: newAccauntData.following,

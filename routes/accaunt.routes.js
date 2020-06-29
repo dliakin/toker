@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const TikTokScraper = require('tiktok-scraper')
 var moment = require('moment-timezone')
+const config = require('config')
 const models = require('../models')
 const auth = require('../middleware/auth.middleware')
 const router = Router()
@@ -24,17 +25,16 @@ router.post(
             })
 
             if (!accaunt) {
-                const accauntData = await TikTokScraper.getUserProfileInfo(uniqueId);
+                const newAccauntData = await TikTokScraper.getUserProfileInfo(uniqueId, { proxy: config.get('proxy') });
                 accaunt = await models.Accaunt.create({
-                    accauntId: accauntData.userId,
-                    uniqueId: accauntData.uniqueId,
-                    nickName: accauntData.nickName,
-                    signature: accauntData.signature,
-                    cover: accauntData.covers[0],
-                    verified: accauntData.verified,
+                    accauntId: newAccauntData.userId,
+                    uniqueId: newAccauntData.uniqueId,
+                    nickName: newAccauntData.nickName,
+                    signature: newAccauntData.signature,
+                    cover: newAccauntData.covers[0],
+                    verified: newAccauntData.verified,
                     active: 1
                 })
-                const newAccauntData = await TikTokScraper.getUserProfileInfo(accaunt.uniqueId)
                 accauntData = await models.AccauntData.create({
                     accauntId: accaunt.id,
                     following: newAccauntData.following,
@@ -113,7 +113,7 @@ router.get(
                 return res.status(404).json({ message: `Аккаунт не найден` })
             }
 
-            const newAccauntData = await TikTokScraper.getUserProfileInfo(accaunt.uniqueId)
+            const newAccauntData = await TikTokScraper.getUserProfileInfo(accaunt.uniqueId, { proxy: config.get('proxy') })
 
             accaunt.fans = newAccauntData.fans
             accaunt.heart = newAccauntData.heart
@@ -138,7 +138,7 @@ router.get(
                 var created_at = obj.dataValues.createdAt
                 var fans = obj.dataValues.fans
 
-                if (moment(accaunt['accauntExtra.updatedAt']).format('YYYY-MM-DD HH:00:00') === moment(created_at).format('YYYY-MM-DD HH:00:00')) {
+                if (moment(accaunt['accauntExtra.updatedAt']).format('YYYY-MM-DD HH') === moment(created_at).format('YYYY-MM-DD HH')) {
                     goal_start_fans = fans
                 }
 
@@ -148,12 +148,16 @@ router.get(
                     return_data.delta = delta
                     prev_fans = fans
                     prev_date = created_at
+                    if (accauntData.length == 1) {
+                        return_data.push({ date: moment(prev_date).format('YYYY-MM-DD HH:00'), fans: prev_fans, delta: delta })
+                    }
                 } else {
                     delta = prev_fans - fans
                     prev_fans = fans
                     prev_date = created_at
+                    return_data.push({ date: moment(prev_date).format('YYYY-MM-DD HH:00'), fans: prev_fans, delta: delta })
                 }
-                return_data.push({ date: moment(prev_date).format('YYYY-MM-DD HH:00:00'), fans: prev_fans, delta: delta })
+
             })
 
 
@@ -174,7 +178,7 @@ router.get(
     '/find/:username',
     async (req, res) => {
         try {
-            const accaunt = await TikTokScraper.getUserProfileInfo(req.params.username);
+            const accaunt = await TikTokScraper.getUserProfileInfo(req.params.username, { proxy: config.get('proxy') });
             res.json(accaunt)
         } catch (error) {
             res.status(500).json({ message: `Что-то пошло не так, попробуйте снова` })
