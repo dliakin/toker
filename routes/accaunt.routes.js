@@ -148,14 +148,14 @@ router.get(
                     return_data.delta = delta
                     prev_fans = fans
                     prev_date = created_at
-                    if (accauntData.length == 1) {
-                        return_data.push({ date: moment(prev_date).format('YYYY-MM-DD HH:00'), fans: prev_fans, delta: delta })
+                    if (accauntData.length === 1) {
+                        return_data.push({ date: moment(prev_date).add(1, 'hours').format('YYYY-MM-DD HH:00'), fans: prev_fans, delta: delta })
                     }
                 } else {
                     delta = prev_fans - fans
                     prev_fans = fans
                     prev_date = created_at
-                    return_data.push({ date: moment(prev_date).format('YYYY-MM-DD HH:00'), fans: prev_fans, delta: delta })
+                    return_data.push({ date: moment(prev_date).add(1, 'hours').format('YYYY-MM-DD HH:00'), fans: prev_fans, delta: delta })
                 }
 
             })
