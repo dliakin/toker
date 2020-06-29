@@ -128,44 +128,28 @@ router.get(
             })
 
             var return_data = []
-            var firstIteration = true
-            var delta = 0;
-            var prev_fans = 0;
-            var prev_date = moment()
             var goal_start_fans = accaunt.fans
 
-            accauntData.forEach(obj => {
+            accauntData.forEach((obj, index, array) => {
                 var created_at = obj.dataValues.createdAt
                 var fans = obj.dataValues.fans
+                var delta = 0
+                if (index + 1 !== array.length) {
+                    delta = obj.dataValues.fans - array[index + 1].dataValues.fans
+                }
 
                 if (moment(accaunt['accauntExtra.updatedAt']).format('YYYY-MM-DD HH') === moment(created_at).format('YYYY-MM-DD HH')) {
                     goal_start_fans = fans
                 }
 
-                if (firstIteration) {
-                    firstIteration = false
-                    delta = newAccauntData.fans - fans
-                    return_data.delta = delta
-                    prev_fans = fans
-                    prev_date = created_at
-                    if (accauntData.length === 1) {
-                        return_data.push({ date: moment(prev_date).add(1, 'hours').format('YYYY-MM-DD HH:00'), fans: prev_fans, delta: delta })
-                    }
-                } else {
-                    delta = prev_fans - fans
-                    prev_fans = fans
-                    prev_date = created_at
-                    return_data.push({ date: moment(prev_date).add(1, 'hours').format('YYYY-MM-DD HH:00'), fans: prev_fans, delta: delta })
-                }
+                return_data.push({ date: moment(created_at).format('YYYY-MM-DD HH:00'), fans, delta })
 
             })
-
-
 
             if (accaunt['accauntExtra.goal']) {
                 accaunt['accauntExtra.goal_start_fans'] = goal_start_fans
             }
-
+            
             accaunt.data = return_data
             res.json(accaunt)
         } catch (error) {

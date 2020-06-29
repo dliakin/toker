@@ -27,9 +27,9 @@
     "moment-timezone": "^0.5.31",
     "mysql2": "^2.1.0",
     "r2": "^2.0.1",
-    "sequelize": "^5.22.0",
+    "sequelize": "^5.22.2",
     "telegraf": "^3.38.0",
-    "tiktok-scraper": "^1.2.5"
+    "tiktok-scraper": "^1.2.6"
   },
   "devDependencies": {
     "concurrently": "^5.2.0",
