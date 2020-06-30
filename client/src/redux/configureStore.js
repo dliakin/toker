@@ -15,24 +15,7 @@ export default () => {
     system: systemReducer,
   }
 
-  const sagaMiddleware = createSagaMiddleware({
-    //TODO Глобальная обработка ошибок
-    // onError: (error) => {
-    //   console.log("Saga Error", error.response)
-    //   if (error.response.status && error.response.status === 402) {
-    //     store.dispatch({ type: NEED_PAY })
-    //   }
-    //   else if (error.response.status && error.response.status === 401) {
-    //     store.dispatch({ type: LOGOUT })
-    //   }
-    //   else if (error.response.data.message) {
-    //     store.dispatch({ type: SHOW_ALERT, payload: { msg: error.response.data.message, type: 'error' } })
-
-    //   } else {
-    //     store.dispatch({ type: SHOW_ALERT, payload: { msg: 'Что-то пошло не так. Попробуйте ещё раз', type: 'error' } })
-    //   }
-    // }
-  })
+  const sagaMiddleware = createSagaMiddleware()
 
   const middleware = [...getDefaultMiddleware(), sagaMiddleware]
 

@@ -112,7 +112,7 @@ router.get(
             if (!accaunt) {
                 return res.status(404).json({ message: `Аккаунт не найден` })
             }
-
+            
             const newAccauntData = await TikTokScraper.getUserProfileInfo(accaunt.uniqueId, { proxy: config.get('proxy') })
 
             accaunt.fans = newAccauntData.fans

@@ -55,6 +55,7 @@ export default {
                 Authorization: `Bearer ${token}`
             },
         }),
+
     telegramLogin: (data, token) =>
         instance({
             method: 'POST',
@@ -65,4 +66,13 @@ export default {
             },
         }),
 
+    setDefaultAccauntId: (data, token) =>
+        instance({
+            method: 'POST',
+            url: '/setDefaultAccauntId',
+            data,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        }),
 }

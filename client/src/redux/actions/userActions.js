@@ -1,4 +1,4 @@
-import { LOGIN_API, LOGOUT, REGISTER_API, UPDATE_USER_DATA_API, CHECK_PAY_API } from "../types"
+import { LOGIN_API, LOGOUT, REGISTER_API, UPDATE_USER_DATA_API, CHECK_PAY_API, SET_DEFAULT_ACCAUNT_ID_API } from "../types"
 
 export const login = (form) => ({
     type: LOGIN_API,
@@ -22,5 +22,11 @@ export const updateUserData = (form, token) => ({
 
 export const checkPay = (token) => ({
     type: CHECK_PAY_API,
+    token
+})
+
+export const setDefaultAccauntId = (accauntId, token) => ({
+    type: SET_DEFAULT_ACCAUNT_ID_API,
+    accauntId,
     token
 })

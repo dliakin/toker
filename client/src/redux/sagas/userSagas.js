@@ -1,5 +1,5 @@
 import { takeEvery, put, call } from 'redux-saga/effects'
-import { LOGIN_API, LOGIN, REGISTER, REGISTER_API, UPDATE_USER_DATA_API, UPDATE_USER_DATA, CHECK_PAY_API, CHECK_PAY } from '../types'
+import { LOGIN_API, LOGIN, REGISTER, REGISTER_API, UPDATE_USER_DATA_API, UPDATE_USER_DATA, CHECK_PAY_API, CHECK_PAY, SET_DEFAULT_ACCAUNT_ID_API, SET_DEFAULT_ACCAUNT_ID } from '../types'
 import AuthApi from '../../axios/auth'
 import PayApi from '../../axios/plan'
 import { safeSaga } from './safeSaga'
@@ -9,6 +9,7 @@ export const userSagaWatcher = [
     takeEvery(REGISTER_API, safeSaga(registerSaga)),
     takeEvery(UPDATE_USER_DATA_API, safeSaga(updateUserDataSaga)),
     takeEvery(CHECK_PAY_API, safeSaga(checkPaySaga)),
+    takeEvery(SET_DEFAULT_ACCAUNT_ID_API, safeSaga(setDefaultAccauntIdSaga)),
 ]
 
 function* loginSaga(action) {
@@ -31,6 +32,11 @@ function* checkPaySaga(action) {
     yield put({ type: CHECK_PAY, payload })
 }
 
+function* setDefaultAccauntIdSaga(action) {
+    yield call(setDefaultAccauntId, action.accauntId, action.token)
+    yield put({ type: SET_DEFAULT_ACCAUNT_ID, defaultAccauntId: action.accauntId })
+}
+
 async function register(form) {
     const data = await AuthApi.register({ ...form })
     return data
@@ -48,5 +54,10 @@ async function updateUserData(form, token) {
 
 async function checkPay(token) {
     const data = await PayApi.checkPay(token)
+    return data
+}
+
+async function setDefaultAccauntId(accauntId, token) {
+    const data = await AuthApi.setDefaultAccauntId({accauntId}, token)
     return data
 }
