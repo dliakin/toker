@@ -10,7 +10,8 @@ import { loadAccaunts, clearAccaunt, deleteAccaunt } from '../redux/actions/acca
 
 const useStyles = makeStyles((theme) => ({
     root: {
-
+        marginBottom: 104,
+        textAlign: "right",
     },
 
     list: {
@@ -18,12 +19,6 @@ const useStyles = makeStyles((theme) => ({
     },
 
     fab: {
-        margin: 0,
-        top: 'auto',
-        // right: 20,
-        // bottom: 70,
-        left: 'auto',
-        // position: 'fixed',
     }
 
 }));
@@ -51,37 +46,39 @@ const Accaunts = ({ accaunts, loadAccaunts, token, defaultAccauntId, clearAccaun
 
     return (
         <Container className={classes.root}>
-            <List className={classes.list}>
-                {accaunts.map((row) => (
-                    <ListItem key={row.uniqueId} component={Link} to={`/accaunt/${row.id}`} >
-                        <ListItemAvatar>
-                            <Avatar
-                                alt={row.nickName}
-                                src={row.cover}
+            <>
+                <List className={classes.list}>
+                    {accaunts.map((row) => (
+                        <ListItem key={row.uniqueId} component={Link} to={`/accaunt/${row.id}`} >
+                            <ListItemAvatar>
+                                <Avatar
+                                    alt={row.nickName}
+                                    src={row.cover}
+                                />
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary={row.nickName}
+                                secondary={row.uniqueId}
                             />
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary={row.nickName}
-                            secondary={row.uniqueId}
-                        />
-                        <ListItemSecondaryAction>
-                            {row.id === defaultAccauntId ?
-                                <IconButton edge="end" color="secondary">
-                                    <StarIcon />
-                                </IconButton>
-                                :
-                                <IconButton edge="end" aria-label="delete" onClick={handleDelete(row.id)}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            }
+                            <ListItemSecondaryAction>
+                                {row.id === defaultAccauntId ?
+                                    <IconButton edge="end" color="secondary">
+                                        <StarIcon />
+                                    </IconButton>
+                                    :
+                                    <IconButton edge="end" aria-label="delete" onClick={handleDelete(row.id)}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                }
 
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                ))}
-            </List>
-            <Fab className={classes.fab} color="secondary" aria-label="add" onClick={handleClickOpen}>
-                <AddIcon />
-            </Fab>
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                    ))}
+                </List>
+                <Fab className={classes.fab} color="secondary" aria-label="add" onClick={handleClickOpen}>
+                    <AddIcon />
+                </Fab>
+            </>
             {<SearchTikTokAccauntDialog open={open} onClose={handleClose} />}
         </Container>
     )

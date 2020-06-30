@@ -5,9 +5,9 @@ module.exports = {
     const transaction = await queryInterface.sequelize.transaction()
     try {
       await queryInterface.addColumn(
-        'Users',
-        'defaultAccauntId',
-        { type: Sequelize.INTEGER },
+        'Pays',
+        'active',
+        { type: Sequelize.BOOLEAN },
         { transaction },
       )
       await transaction.commit();
@@ -23,7 +23,7 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     const transaction = await queryInterface.sequelize.transaction()
     try {
-      await queryInterface.removeColumn('Users', 'defaultAccauntId')
+      await queryInterface.removeColumn('Pays', 'active')
       await transaction.commit();
       return Promise.resolve();
     } catch (err) {

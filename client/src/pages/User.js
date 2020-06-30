@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { updateUserData } from '../redux/actions/userActions'
+import { updateUserData, setDefaultAccauntId } from '../redux/actions/userActions'
+import { loadAccaunts } from '../redux/actions/accauntActions'
 import { connect } from 'react-redux'
-import { TextField, Container, Typography, Card, CardContent, CardActions, Button, makeStyles } from '@material-ui/core'
+import { Link } from 'react-router-dom'
+import { TextField, Container, Typography, Card, CardContent, CardActions, Button, makeStyles, InputLabel, Select, MenuItem } from '@material-ui/core'
 import AuthApi from '../axios/auth'
 import TelegramLoginButton from 'react-telegram-login'
 
@@ -12,12 +14,15 @@ const useStyles = makeStyles((theme) => ({
     sub: {
         marginTop: 20,
     },
+    select: {
+        minWidth: 120,
+    },
 }));
 
-const User = ({ user, updateUserData }) => {
+const User = ({ user, updateUserData, accaunts, loadAccaunts, setDefaultAccauntId }) => {
     const classes = useStyles()
-    const [isEdit, setIsEdit] = useState(false);
-    const [userData, setUserData] = useState(null);
+    const [isEdit, setIsEdit] = useState(false)
+    const [userData, setUserData] = useState(null)
 
     const [form, setForm] = useState({
         email: user.email, password: ''
@@ -45,7 +50,8 @@ const User = ({ user, updateUserData }) => {
             }
         }
         fetchData()
-    }, [user])
+        loadAccaunts(user.token)
+    }, [user, loadAccaunts])
 
     const saveHandler = async () => {
         try {
@@ -56,6 +62,11 @@ const User = ({ user, updateUserData }) => {
         } catch (error) {
             setIsLoading(false);
         }
+    }
+
+    const handleChange = async (event) => {
+        if (event.target.value !== -1)
+            await setDefaultAccauntId(event.target.value, user.token)
     }
 
     return (
@@ -123,7 +134,18 @@ const User = ({ user, updateUserData }) => {
                     <Typography>
                         Доступ до: {userData.paidTo}
                     </Typography>
+
                 </CardContent>
+                <CardActions>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        component={Link}
+                        to="/plans"
+                    >
+                        Продлить
+                    </Button>
+                </CardActions>
             </Card>}
             {userData && <Card className={classes.sub}>
                 <Typography>
@@ -135,18 +157,42 @@ const User = ({ user, updateUserData }) => {
                     }
                 </CardContent>
             </Card>}
+            {userData && <Card className={classes.sub}>
+                <Typography>
+                    Аккаунт ТикТока
+                </Typography>
+                <CardContent>
+                    <InputLabel id="tiktok-id">TikTok</InputLabel>
+                    <Select
+                        labelId="tiktok-id-label"
+                        id="tiktok-id-select"
+                        value={user.defaultAccauntId || -1}
+                        onChange={handleChange}
+                        className={classes.select}
+                    >
+                        {!user.defaultAccauntId && <MenuItem value={-1} key={-1}>Выберите аккаунт</MenuItem>}
+                        {accaunts.map((row) => (
+                            <MenuItem value={row.id} key={row.id}>{row.uniqueId}</MenuItem>
+                        ))}
+
+                    </Select>
+                </CardContent>
+            </Card>}
         </Container >
     )
 }
 
 const mapStateToProps = state => {
     return {
+        accaunts: state.accaunt.accaunts,
         user: state.user,
     }
 }
 
 const mapDispatchToProps = {
-    updateUserData
+    updateUserData,
+    loadAccaunts,
+    setDefaultAccauntId,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(User)

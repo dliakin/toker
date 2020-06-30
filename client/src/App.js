@@ -5,6 +5,7 @@ import TopNavbar from './components/TopNavbar';
 import { useSelector } from 'react-redux'
 import AlertDialog from './components/AlertDialog';
 import BottomNavbar from './components/BottomNavbar';
+import AlertBottomPannel from './components/AlertBottomPannel';
 
 function App() {
   const token = useSelector(state => state.user.token)
@@ -16,9 +17,8 @@ function App() {
     <>
       <Router >
         {isAuthenticated && <TopNavbar />}
-        <div>
-          {routes}
-        </div>
+        {routes}
+        {isAuthenticated && <AlertBottomPannel />}
         {isAuthenticated && <BottomNavbar />}
       </Router>
       <AlertDialog />

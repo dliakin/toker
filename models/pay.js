@@ -5,8 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     planId: DataTypes.INTEGER,
     paidTo: DataTypes.DATE,
     realSum: DataTypes.INTEGER,
+    active: DataTypes.BOOLEAN,
   }, {});
-  Pay.associate = function(models) {
+  Pay.associate = function (models) {
     // associations can be defined here
   };
   return Pay;

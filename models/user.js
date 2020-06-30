@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     roleId: DataTypes.INTEGER,
+    defaultAccauntId: DataTypes.INTEGER,
   }, {});
   User.associate = function (models) {
     User.belongsToMany(models.Accaunt, { through: 'UserAccaunt' })
