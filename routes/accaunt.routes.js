@@ -112,11 +112,14 @@ router.get(
             if (!accaunt) {
                 return res.status(404).json({ message: `Аккаунт не найден` })
             }
-            
-            const newAccauntData = await TikTokScraper.getUserProfileInfo(accaunt.uniqueId, { proxy: config.get('proxy') })
 
-            accaunt.fans = newAccauntData.fans
-            accaunt.heart = newAccauntData.heart
+            var newAccauntData = null
+            try {
+                newAccauntData = await TikTokScraper.getUserProfileInfo(accaunt.uniqueId, { proxy: config.get('proxy') })
+            } catch (e) {
+                console.error("TikTokScraper Error:", e)
+            }
+
             const accauntData = await models.AccauntData.findAll({
                 attributes: ['fans', 'createdAt'],
                 where: {
@@ -126,6 +129,14 @@ router.get(
                     ['createdAt', 'DESC'],
                 ]
             })
+
+            if(newAccauntData){
+                accaunt.fans = newAccauntData.fans
+                accaunt.heart = newAccauntData.heart
+            }else{
+                accaunt.fans = accauntData[0].dataValues.fans
+                accaunt.heart = accauntData[0].dataValues.heart
+            }
 
             var return_data = []
             var goal_start_fans = accaunt.fans
@@ -149,7 +160,7 @@ router.get(
             if (accaunt['accauntExtra.goal']) {
                 accaunt['accauntExtra.goal_start_fans'] = goal_start_fans
             }
-            
+
             accaunt.data = return_data
             res.json(accaunt)
         } catch (error) {

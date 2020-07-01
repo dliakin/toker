@@ -38,14 +38,14 @@ const Plans = ({ token }) => {
     useEffect(() => {
         try {
             async function fetchData() {
-                const plans = await PlanApi.all(token,new URLSearchParams(location.search))
+                const plans = await PlanApi.all(token, new URLSearchParams(location.search))
                 setPlans(plans)
             }
             fetchData()
         } catch (error) {
             //Ничего не делаем
         }
-    }, [token])
+    }, [token, location.search])
 
     if (plans) {
         return (
