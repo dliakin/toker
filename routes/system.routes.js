@@ -28,7 +28,7 @@ router.get(
 
             if (pay) {
                 const days = moment(pay.paidTo).diff(moment(), 'days')
-                return res.json({ type: "info", message: `ОСТАЛОСЬ ДНЕЙ: ${days}`, action: { text: "Продлить со скидкой", link: "/plans" } })
+                return res.json({ type: "info", message: `ОСТАЛОСЬ ДНЕЙ: ${days}`, action: { text: "Продлить со скидкой", link: "/plans/?coupon=lastchance" } })
             }
 
             res.status(404).json({ message: `Сооьщений нет` })

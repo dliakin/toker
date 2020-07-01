@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, CardContent, Typography, CardActions, Button, makeStyles, Container, CardHeader, LinearProgress } from '@material-ui/core'
 import PlanApi from '../axios/plan'
 import { connect } from 'react-redux'
+import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -32,11 +33,12 @@ const useStyles = makeStyles((theme) => ({
 const Plans = ({ token }) => {
     const [plans, setPlans] = useState()
     const classes = useStyles();
+    let location = useLocation()
 
     useEffect(() => {
         try {
             async function fetchData() {
-                const plans = await PlanApi.all(token)
+                const plans = await PlanApi.all(token,new URLSearchParams(location.search))
                 setPlans(plans)
             }
             fetchData()

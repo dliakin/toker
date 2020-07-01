@@ -23,10 +23,11 @@ instance.interceptors.response.use(function (response) {
 });
 
 export default {
-    all: (token) =>
+    all: (token, params) =>
         instance({
             method: 'GET',
             url: `/`,
+            params,
             headers: {
                 Authorization: `Bearer ${token}`
             },
