@@ -11,7 +11,7 @@ import { logout } from '../redux/actions/userActions'
 const useStyles = makeStyles((theme) => ({
     container: {
         paddingTop: 20,
-        marginBottom: 56
+        marginBottom: 104
     },
     body: {
         textAlign: 'left',

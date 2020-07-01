@@ -1,56 +1,32 @@
 import React, { useEffect, useState } from 'react'
-import { Card, CardContent, Typography, CardActions, Button, makeStyles, Container } from '@material-ui/core'
+import { Card, CardContent, Typography, CardActions, Button, makeStyles, Container, CardHeader, LinearProgress } from '@material-ui/core'
 import PlanApi from '../axios/plan'
 import { connect } from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
     container: {
-        paddingTop: 20
+        paddingTop: 20,
+        marginBottom: 104,
+    },
+    cardHeader: {
+        backgroundColor:
+            theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[700],
+    },
+    cardPricing: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'baseline',
+        padding: 0,
+    },
+    cardPricingTotal: {
+        padding: 0
     },
     card: {
-        maxWidth: 300,
-        margin: '0 auto',
+        marginBottom: 25,
     },
-    name: {
-        color: 'rgb(36, 30, 18)',
-        textAlign: 'center',
-        fontWeight: 700,
-        fontSize: '1rem',
-        lineHeight: 1.5,
+    cardContent: {
+        padding: 10
     },
-    description: {
-        color: 'rgb(112, 108, 100)',
-        textAlign: 'center',
-        fontWeight: 400,
-        fontSize: '0.875rem',
-        lineHeight: 1.5,
-    },
-    duration: {
-        color: 'rgb(112, 108, 100)',
-        letterSpacing: '0.1em',
-        textTransform: 'uppercase',
-        textAlign: 'center',
-        fontWeight: 700,
-        fontSize: '0.875rem',
-        lineHeight: 1.5,
-    },
-    price: {
-        color: 'rgb(36, 30, 18)',
-        textAlign: 'center',
-        fontWeight: 700,
-        fontSize: '1.625rem',
-        lineHeight: 1.25,
-    },
-    button: {
-        fontWeight: 500,
-        fontSize: '1rem',
-        borderRadius: '9999px',
-        textAlign: 'center',
-    },
-    cardactions: {
-        display: 'block',
-        textAlign: 'center',
-    }
 }));
 
 const Plans = ({ token }) => {
@@ -74,33 +50,42 @@ const Plans = ({ token }) => {
             <Container className={classes.container}>
                 {plans.map((row) => (
                     <Card key={row.id} className={classes.card}>
-                        <CardContent>
-                            <Typography className={classes.name}>
-                                {row.name}
-                            </Typography>
-                            <Typography className={classes.description}>
-                                {row.description}
-                            </Typography>
-                            <Typography className={classes.price}>
-                                {row.price}
-                            </Typography>
-                            <Typography className={classes.duration}>
-                                {row.duration} месяц
-                        </Typography>
+                        <CardHeader
+                            title={row.duration + (row.duration === 1 ? " МЕСЯЦ" : row.duration > 1 && row.duration < 5 ? " МЕСЯЦА" : " МЕСЯЦЕВ")}
+                            subheader={row.subheader}
+                            titleTypographyProps={{ align: 'center', }}
+                            subheaderTypographyProps={{ align: 'center' }}
+                            // action={row.name === 'Pro' ? <StarIcon /> : null}
+                            className={classes.cardHeader}
+
+                        />
+                        <CardContent className={classes.cardContent}>
+                            <div className={classes.cardPricing}>
+                                <Typography component="h2" variant="h3" color="textPrimary" p={1}>
+                                    {row.price / row.duration}
+                                </Typography>
+                                <Typography variant="h6" color="textSecondary" >
+                                    {" руб/месяц"}
+                                </Typography>
+                            </div>
+                            <div className={classes.cardPricingTotal}>
+                                <Typography variant="subtitle1" align="center" >
+                                    {row.price + " руб"}
+                                </Typography>
+                            </div>
                         </CardContent>
-                        <CardActions className={classes.cardactions}>
-                            <Button color="primary" variant="contained" className={classes.button} target="_self" href={row.url}>Купить</Button>
+                        <CardActions>
+                            <Button variant="contained" fullWidth color="secondary" target="_self" href={row.url}>
+                                {"ОПЛАТИТЬ НА " + row.duration + (row.duration === 1 ? " МЕСЯЦ" : row.duration > 1 && row.duration < 5 ? " МЕСЯЦА" : " МЕСЯЦЕВ")}
+                            </Button>
                         </CardActions>
-                    </Card>))}
+                    </Card>
+                ))}
             </Container>
         )
     } else {
         return (
-            <Container>
-                <Typography>
-                    На данный момент мест в клубе нет. Оставь свою почту, что бы не пропустить продажи
-                </Typography>
-            </Container>
+            <LinearProgress />
         )
     }
 }

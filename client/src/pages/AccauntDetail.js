@@ -11,7 +11,7 @@ import SetFollowersGoalDialog from '../components/SetFollowersGoalDialog'
 const useStyles = makeStyles((theme) => ({
     container: {
         textAlign: 'center',
-        marginBottom: 56
+        marginBottom: 104
     },
     nickname: {
         paddingLeft: "36%"

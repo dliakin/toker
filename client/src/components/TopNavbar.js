@@ -84,6 +84,9 @@ const TopNavbar = ({ logout }) => {
             case '/user':
                 headerText = 'Настройки'
                 break
+            case '/plans':
+                headerText = 'Тарифы'
+                break
             default:
                 headerText = ''
                 break
