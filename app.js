@@ -94,19 +94,21 @@ var checkUsers = new CronJob('0 0 */1 * * *', async function () {
                 await telegram.kickChatMember(-1001198187467, telegramUser.telegramId)
                 await telegram.kickChatMember(-1001311987827, telegramUser.telegramId)
 
-                const pay = user.Pays[0]
-                pay.active = false
-                pay.save()
-
-                telegram.sendMessage(139253874, 
-                    `Пользователь исключён из клуба!\n\n`
-                    +`Оплата №${pay.id}\n`
-                    +`Сумма: ${pay.realSum} руб\n` 
-                    +`Дата: ${moment(pay.updatedAt).format('YYYY-MM-DD HH:mm')}\n` 
-                    +`Email: ${user.email}\n` 
-                    +`Телеграм: @${telegramUser.username}\n` 
-                )
             }
+
+            const pay = user.Pays[0]
+            pay.active = false
+            pay.save()
+
+            telegram.sendMessage(139253874,
+                `Пользователь исключён из клуба!\n\n`
+                + `Оплата №${pay.id}\n`
+                + `Сумма: ${pay.realSum} руб\n`
+                + `Дата: ${moment(pay.updatedAt).format('YYYY-MM-DD HH:mm')}\n`
+                + `Email: ${user.email}\n`
+                + `Телеграм: @${telegramUser ? telegramUser.username : "Нет в Телеграм"}\n`
+            )
+
         })
 
     } catch (error) {
