@@ -99,12 +99,9 @@ var remindSubExpiried = new CronJob('0 0 12 * * *', async function () {
                         , options)
 
                     telegram.sendMessage(139253874,
-                        `Отправлено напоминание!\n\n`
-                        + `Оплата №${pay.id}\n`
-                        + `Сумма: ${pay.realSum} руб\n`
-                        + `Дата: ${moment(pay.updatedAt).format('YYYY-MM-DD HH:mm')}\n`
+                        `Отправлено напоминание за ${days} ${days === 1 ? "день" : days === 3 ? "дня" : "дней"}!\n\n`
                         + `Email: ${user.email}\n`
-                        + `Телеграм: @${telegramUser ? telegramUser.username : "Нет в Телеграм"}\n`
+                        + `Телеграм: @${telegramUser.username}\n`
                     )
                 }
             }
