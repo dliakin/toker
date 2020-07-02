@@ -37,7 +37,7 @@ const AlertDialog = ({ token }) => {
         const interval = setInterval(() => {
             fetchData()
         }, 3600000)
-        
+
         return () => clearInterval(interval)
     })
 

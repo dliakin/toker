@@ -57,6 +57,64 @@ var saveStats = new CronJob('0 0 */1 * * *', async function () {
     }
 }, null, true, 'Europe/Moscow')
 
+var remindSubExpiried = new CronJob('0 0 12 * * *', async function () {
+    try {
+        const users = await models.User.findAll({
+            include: [
+                {
+                    model: models.Pay,
+                    where: {
+                        paidTo: {
+                            [Op.and]: [
+                                { [Op.lte]: moment().add(8, 'days').toDate() },
+                                { [Op.gte]: moment() }
+                            ]
+                        },
+                        active: true
+                    }
+                },
+                {
+                    model: models.TelegramUser,
+                }
+            ]
+        })
+        users.forEach(async user => {
+            const pay = user.Pays[0]
+            const days = moment(pay.paidTo).diff(moment(), 'days')
+            if (days === 7 || days === 3 || days === 1) {
+                if (user.TelegramUser !== null) {
+
+                    telegramUser = user.TelegramUser
+
+                    var options = {
+                        parse_mode: "HTML"
+                        , disable_web_page_preview: true
+                    }
+
+                    telegram.sendMessage(telegramUser.telegramId,
+                        `Здравствуйте! \n\n`
+                        + `У вас закончивается подписка в клуб через ${days} ${days === 1 ? "день" : days === 3 ? "дня" : "дней"}\n`
+                        + `Успейте продлить со скидкой 🤗\n`
+                        + `<a href="https://toker.team/plans?coupon=lastchance">Продлить</a>`
+                        , options)
+
+                    telegram.sendMessage(139253874,
+                        `Отправлено напоминание!\n\n`
+                        + `Оплата №${pay.id}\n`
+                        + `Сумма: ${pay.realSum} руб\n`
+                        + `Дата: ${moment(pay.updatedAt).format('YYYY-MM-DD HH:mm')}\n`
+                        + `Email: ${user.email}\n`
+                        + `Телеграм: @${telegramUser ? telegramUser.username : "Нет в Телеграм"}\n`
+                    )
+                }
+            }
+        })
+    } catch (error) {
+        //TODO обработать ошибку
+        console.log(error)
+    }
+}, null, true, 'Europe/Moscow')
+
 var checkUsers = new CronJob('0 0 */1 * * *', async function () {
     try {
         const users = await models.User.findAll({
@@ -94,6 +152,12 @@ var checkUsers = new CronJob('0 0 */1 * * *', async function () {
                 await telegram.kickChatMember(-1001198187467, telegramUser.telegramId)
                 await telegram.kickChatMember(-1001311987827, telegramUser.telegramId)
 
+                telegram.sendMessage(139253874,
+                    `Здравствуйте! \n\n`
+                    + `У вас закончилась подписка в клуб.\n`
+                    + `Будем рады видеть вас снова 🤗\n`
+                    + `https://toker.team/`
+                )
             }
 
             const pay = user.Pays[0]
@@ -108,7 +172,6 @@ var checkUsers = new CronJob('0 0 */1 * * *', async function () {
                 + `Email: ${user.email}\n`
                 + `Телеграм: @${telegramUser ? telegramUser.username : "Нет в Телеграм"}\n`
             )
-
         })
 
     } catch (error) {
@@ -121,6 +184,7 @@ async function start() {
     try {
         saveStats.start()
         checkUsers.start()
+        remindSubExpiried.start()
     } catch (error) {
         console.log('Server Error', error.message)
         process.exit(1)
