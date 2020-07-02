@@ -28,7 +28,7 @@ router.get(
                     userId: req.user.userId,
                     paidTo: {
                         [Op.and]: [
-                            { [Op.lte]: moment().add(7, 'days').toDate() },
+                            { [Op.lte]: moment().add(8, 'days').toDate() },
                             { [Op.gte]: moment() }
                         ]
                     },
