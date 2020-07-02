@@ -149,7 +149,7 @@ const User = ({ user, updateUserData, accaunts, loadAccaunts, setDefaultAccauntI
             </Card>}
             {userData && <Card className={classes.sub}>
                 <Typography>
-                    Доступ в телеграм
+                    Телеграм
                 </Typography>
                 <CardContent>
                     {userData.tgUser ? <Typography>Логин в телеграм: {userData.tgUser}</Typography>

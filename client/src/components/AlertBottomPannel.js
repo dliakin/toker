@@ -27,13 +27,19 @@ const AlertDialog = ({ token }) => {
         async function fetchData() {
             try {
                 const alert = await SystemApi.getBottomALert(token)
+                console.log("getBottomALert: ", alert)
                 setAlert(alert)
             } catch (error) {
 
             }
         }
-        fetchData()
-    }, [token])
+
+        const interval = setInterval(() => {
+            fetchData()
+        }, 3600000)
+        
+        return () => clearInterval(interval)
+    })
 
     if (alert) {
         return (
@@ -46,6 +52,7 @@ const AlertDialog = ({ token }) => {
                             size="small"
                             variant="outlined"
                             component={Link}
+                            onClick={() => setAlert(null)}
                             to={alert.action.link}
                         >
                             {alert.action.text}
