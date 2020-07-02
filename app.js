@@ -8,6 +8,7 @@ const Telegram = require('telegraf/telegram')
 const CronJob = require('cron').CronJob
 const TikTokScraper = require('tiktok-scraper')
 const fs = require('fs')
+var moment = require('moment-timezone')
 const { Op } = require('sequelize')
 const models = require('./models')
 
@@ -56,7 +57,7 @@ var saveStats = new CronJob('0 0 */1 * * *', async function () {
     }
 }, null, true, 'Europe/Moscow')
 
-var checkUsers = new CronJob('0 */1 * * * *', async function () {
+var checkUsers = new CronJob('0 0 */1 * * *', async function () {
     try {
         const users = await models.User.findAll({
             include: [
@@ -72,7 +73,42 @@ var checkUsers = new CronJob('0 */1 * * * *', async function () {
                 }
             ]
         })
-        console.log("Users to delete: ", users)
+        users.forEach(async user => {
+            if (user.TelegramUser !== null) {
+                telegramUser = user.TelegramUser
+
+                // Клуб тикток чат
+                // https://web.telegram.org/#/im?p=s1185920407_17777605011897856854 -1001185920407
+
+                // клуб тикто идеи
+                // https://web.telegram.org/#/im?p=s1448422474_13891669535035742641 -1001448422474
+
+                // клуб тикток тренды
+                // https://web.telegram.org/#/im?p=c1198187467_16302971017108569062 -1001198187467
+
+                // клуб тикток важное
+                // https://web.telegram.org/#/im?p=c1311987827_10130816211160047142 -1001311987827
+
+                await telegram.kickChatMember(-1001185920407, telegramUser.telegramId)
+                await telegram.kickChatMember(-1001448422474, telegramUser.telegramId)
+                await telegram.kickChatMember(-1001198187467, telegramUser.telegramId)
+                await telegram.kickChatMember(-1001311987827, telegramUser.telegramId)
+
+                const pay = user.Pays[0]
+                pay.active = false
+                pay.save()
+
+                telegram.sendMessage(139253874, 
+                    `Пользователь исключён из клуба!\n\n`
+                    +`Оплата №${pay.id}\n`
+                    +`Сумма: ${pay.realSum} руб\n` 
+                    +`Дата: ${moment(pay.updatedAt).format('YYYY-MM-DD HH:mm')}\n` 
+                    +`Email: ${user.email}\n` 
+                    +`Телеграм: @${telegramUser.username}\n` 
+                )
+            }
+        })
+
     } catch (error) {
         //TODO обработать ошибку
         console.log(error)

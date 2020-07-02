@@ -43,8 +43,8 @@ const AlertDialog = ({ token }) => {
                     severity={alert.type}
                     action={
                         alert.action && <Button
-                            color="inherit"
                             size="small"
+                            variant="outlined"
                             component={Link}
                             to={alert.action.link}
                         >

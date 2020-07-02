@@ -13,6 +13,16 @@ router.get(
     async (req, res) => {
         try {
 
+            const telegramUser = await models.TelegramUser.findOne({
+                where: {
+                    userId: req.user.userId
+                }
+            })
+
+            if (!telegramUser){
+                return res.json({ type: "warning", message: `Привяжите Telegram`, action: { text: "Привязать", link: "/user" } })
+            }
+
             const pay = await models.Pay.findOne({
                 where: {
                     userId: req.user.userId,
@@ -31,7 +41,7 @@ router.get(
                 return res.json({ type: "info", message: `ОСТАЛОСЬ ДНЕЙ: ${days}`, action: { text: "Продлить со скидкой", link: "/plans/?coupon=lastchance" } })
             }
 
-            res.status(404).json({ message: `Сооьщений нет` })
+            res.json(null)
 
         } catch (error) {
             console.log(error)
