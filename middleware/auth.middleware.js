@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const config = require('config')
-const { Op } = require('sequelize');
+const { Op } = require('sequelize')
 const models = require('../models')
 
 module.exports = async (req, res, next) => {

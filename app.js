@@ -4,13 +4,16 @@ const path = require('path')
 const cors = require('cors')
 const http = require('http')
 const https = require('https')
+const Telegram = require('telegraf/telegram')
 const CronJob = require('cron').CronJob
 const TikTokScraper = require('tiktok-scraper')
 const fs = require('fs')
+const { Op } = require('sequelize')
 const models = require('./models')
 
 httpApp = express()
 const app = express()
+const telegram = new Telegram(config.get("telegramToken"))
 
 app.use(cors())
 app.use(express.json({ extended: true }))
@@ -53,9 +56,33 @@ var saveStats = new CronJob('0 0 */1 * * *', async function () {
     }
 }, null, true, 'Europe/Moscow')
 
+var checkUsers = new CronJob('0 */1 * * * *', async function () {
+    try {
+        const users = await models.User.findAll({
+            include: [
+                {
+                    model: models.Pay,
+                    where: {
+                        active: true,
+                        paidTo: { [Op.lt]: new Date() }
+                    }
+                },
+                {
+                    model: models.TelegramUser,
+                }
+            ]
+        })
+        console.log("Users to delete: ", users)
+    } catch (error) {
+        //TODO обработать ошибку
+        console.log(error)
+    }
+}, null, true, 'Europe/Moscow')
+
 async function start() {
     try {
-        saveStats.start();
+        saveStats.start()
+        checkUsers.start()
     } catch (error) {
         console.log('Server Error', error.message)
         process.exit(1)
