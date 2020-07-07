@@ -9,8 +9,10 @@ import NewDetail from './pages/NewDetail'
 import SuccessPay from './pages/SuccessPay'
 import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
+import Landing from './pages/Landing'
+import Welcome from './pages/Welcome'
 
-export const useRoutes = (isAuthenticated, needPay) => {
+export const useRoutes = (isAuthenticated, needPay, welcome) => {
     if (isAuthenticated) {
         if (needPay) {
             return (
@@ -24,7 +26,18 @@ export const useRoutes = (isAuthenticated, needPay) => {
                     <Redirect to="/plans" />
                 </Switch>
             )
-        } else {
+        }
+        else if (welcome === null || welcome === true) {
+            return (
+                <Switch>
+                    <Route path="/welcome" exact>
+                        <Welcome />
+                    </Route>
+                    <Redirect to="/welcome" />
+                </Switch>
+            )
+        }
+        else {
             return (
                 <Switch>
                     <Route path="/accaunts" exact>
@@ -45,6 +58,9 @@ export const useRoutes = (isAuthenticated, needPay) => {
                     <Route path="/plans" exact>
                         <Plans />
                     </Route>
+                    <Route path="/welcome" exact>
+                        <Welcome />
+                    </Route>
                     <Redirect to="/accaunts" />
                 </Switch>
             )
@@ -54,7 +70,7 @@ export const useRoutes = (isAuthenticated, needPay) => {
     return (
         <Switch>
             <Route path="/" exact>
-                <SignIn />
+                <Landing />
             </Route>
             <Route path="/signup" exact>
                 <SignUp />
@@ -62,7 +78,7 @@ export const useRoutes = (isAuthenticated, needPay) => {
             <Route path="/signin" exact>
                 <SignIn />
             </Route>
-            <Redirect to="/signin" />
+            <Redirect to="/" />
         </Switch>
     )
 }

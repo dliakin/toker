@@ -11,7 +11,8 @@ function App() {
   const token = useSelector(state => state.user.token)
   const isAuthenticated = !!token
   const needPay = useSelector(state => state.user.needPay)
-  const routes = useRoutes(isAuthenticated, needPay)
+  const welcome = useSelector(state => state.user.welcome)
+  const routes = useRoutes(isAuthenticated, needPay, welcome)
 
   return (
     <>

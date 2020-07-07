@@ -38,14 +38,19 @@ const Plans = ({ token }) => {
     useEffect(() => {
         try {
             async function fetchData() {
-                const plans = await PlanApi.all(token, new URLSearchParams(location.search))
+                const plans = await PlanApi.all(new URLSearchParams(location.search))
                 setPlans(plans)
             }
             fetchData()
         } catch (error) {
             //Ничего не делаем
         }
-    }, [token, location.search])
+    }, [location.search])
+
+    const clickPayHandler = async (id) => {
+        const payload = await PlanApi.getPayUrl(id, new URLSearchParams(location.search), token)
+        window.location = payload.payurl
+    }
 
     if (plans) {
         return (
@@ -77,7 +82,7 @@ const Plans = ({ token }) => {
                             </div>
                         </CardContent>
                         <CardActions>
-                            <Button variant="contained" fullWidth color="secondary" target="_self" href={row.url}>
+                            <Button variant="contained" fullWidth color="secondary" target="_self" onClick={() => clickPayHandler(row.id)}>
                                 {"ОПЛАТИТЬ НА " + row.duration + (row.duration === 1 ? " МЕСЯЦ" : row.duration > 1 && row.duration < 5 ? " МЕСЯЦА" : " МЕСЯЦЕВ")}
                             </Button>
                         </CardActions>

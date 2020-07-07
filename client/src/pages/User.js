@@ -37,7 +37,6 @@ const User = ({ user, updateUserData, accaunts, loadAccaunts, setDefaultAccauntI
     const handleTelegramResponse = async response => {
         const data = await AuthApi.telegramLogin(response, user.token)
         setUserData({ ...userData, tgUser: data.tgUser })
-
     }
 
     useEffect(() => {

@@ -17,7 +17,8 @@ module.exports = async (req, res, next) => {
         const decoded = jwt.verify(token, config.get('jwtSecret'))
         req.user = decoded
 
-        if (req.originalUrl !== '/api/plan/') {
+        console.log(req.originalUrl)
+        if (!req.originalUrl.includes('/api/plan/')) {
             const existingPay = await models.Pay.findOne({
                 where: {
                     userId: decoded.userId,

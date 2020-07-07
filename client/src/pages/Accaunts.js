@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Accaunts = ({ accaunts, loadAccaunts, token, defaultAccauntId, clearAccaunt, deleteAccaunt }) => {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
     const classes = useStyles()
 
     const handleClickOpen = () => {

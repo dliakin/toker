@@ -120,7 +120,7 @@ var checkUsers = new CronJob('0 0 */1 * * *', async function () {
                     model: models.Pay,
                     where: {
                         active: true,
-                        paidTo: { [Op.lt]: new Date() }
+                        paidTo: { [Op.lt]: new Date() } //TODO Это лишнее т.к. у нас всегда одна активная оплата
                     }
                 },
                 {

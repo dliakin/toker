@@ -57,7 +57,7 @@ const NewDetail = ({ token }) => {
                             playing={false}
                             height="100%"
                             width="100%"
-                            controls="true"
+                            controls={true}
                             key={row.id}
                         />
                     else if (row.mime_type.includes('audio')) return <AudioReactPlayer url={row.url} key={row.id} />

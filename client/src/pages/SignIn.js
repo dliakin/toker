@@ -121,8 +121,8 @@ const SignIn = ({ login }) => {
                     </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link component={RLink} to="/signup" variant="body2">
-                                Нет аккаунта? Регистрация
+                            <Link component={RLink} to="/#plans" variant="body2">
+                                Нет аккаунта? Выбрать тариф
                             </Link>
                         </Grid>
                     </Grid>

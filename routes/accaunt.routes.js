@@ -14,10 +14,6 @@ router.post(
         try {
             const { uniqueId } = req.body
 
-            //TODO
-            //Сделать проверку, что аккаунт уже добавлен юзеру и возвращать
-            //Если не добавлен, проверять добавлен ли аккаунт в базу - если добавлен, то просто добавить аккаунт юзеру
-
             var accaunt = await models.Accaunt.findOne({
                 where: {
                     uniqueId
@@ -53,7 +49,7 @@ router.post(
             })
 
             if (userAccaunt) {
-                res.status(200).json(null)
+                return res.status(200).json(null)
             }
 
             const user = await models.User.findOne({
@@ -66,6 +62,7 @@ router.post(
 
             res.status(201).json({ accaunt })
         } catch (error) {
+            console.log(error)
             res.status(500).json({ message: `Что-то пошло не так, попробуйте снова` })
         }
     })
@@ -130,10 +127,10 @@ router.get(
                 ]
             })
 
-            if(newAccauntData){
+            if (newAccauntData) {
                 accaunt.fans = newAccauntData.fans
                 accaunt.heart = newAccauntData.heart
-            }else{
+            } else {
                 accaunt.fans = accauntData[0].dataValues.fans
                 accaunt.heart = accauntData[0].dataValues.heart
             }

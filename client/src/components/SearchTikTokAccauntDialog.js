@@ -70,7 +70,7 @@ const SearchTikTokAccauntDialog = ({ open, onClose, token, addAccaunt }) => {
                 <Button onClick={handleClose} color="primary">
                     Отмена
                     </Button>
-                <Button onClick={handleAdd} color="primary" >
+                <Button onClick={handleAdd} color="primary" disabled={!accaunt}>
                     Добавить
                     </Button>
             </DialogActions>

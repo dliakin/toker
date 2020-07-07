@@ -1,10 +1,11 @@
-import { LOGIN, LOGOUT, REGISTER, UPDATE_USER_DATA, CHECK_PAY, NEED_PAY, SET_DEFAULT_ACCAUNT_ID } from "../types"
+import { LOGIN, LOGOUT, REGISTER, UPDATE_USER_DATA, CHECK_PAY, NEED_PAY, SET_DEFAULT_ACCAUNT_ID, SET_WELCOME } from "../types"
 
 const initialState = {
     userId: null,
     token: null,
     defaultAccauntId: null,
-    needPay: false
+    needPay: false,
+    welcome: null,
 }
 
 export const userReducer = (state = initialState, action) => {
@@ -34,6 +35,8 @@ export const userReducer = (state = initialState, action) => {
             return { ...state, needPay: action.payload.isPay }
         case NEED_PAY:
             return { ...state, needPay: true }
+        case SET_WELCOME:
+            return { ...state, welcome: action.flag }
         default: return state
     }
 }

@@ -23,19 +23,34 @@ instance.interceptors.response.use(function (response) {
 });
 
 export default {
-    all: (token, params) =>
+    all: (params) =>
         instance({
             method: 'GET',
             url: `/`,
             params,
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
+
         }),
     checkPay: (token) =>
         instance({
             method: 'GET',
             url: '/checkPay',
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        }),
+
+    get: (id, data, params) =>
+        instance({
+            method: 'POST',
+            params,
+            url: `/${id}`,
+            data,
+        }),
+    getPayUrl: (id, params, token) =>
+        instance({
+            method: 'GET',
+            url: `/getPayUrl/${id}`,
+            params,
             headers: {
                 Authorization: `Bearer ${token}`
             },

@@ -18,13 +18,15 @@ function* loadAccauntsSaga(action) {
 
 function* addAccauntSaga(action) {
     const payload = yield call(addAccaunt, action.accaunt.uniqueId, action.token)
-    yield put({ type: ADD_ACCAUNT, payload })
+    if (payload) {
+        yield put({ type: ADD_ACCAUNT, payload })
+    }
+
 }
 
 function* getAccauntSaga(action) {
     const payload = yield call(getAccaunt, action.id, action.token)
     yield put({ type: GET_ACCAUNT, payload })
-
 }
 
 function* setFollowersGoalSaga(action) {
