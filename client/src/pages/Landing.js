@@ -156,7 +156,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardPricingText: {
     color: 'rgb(255, 255, 255)',
-    fontSize: '45px',
+    fontSize: '40px',
     marginBottom: '0px',
     fontFamily: 'Roboto,Arial,sans-serif',
     fontWeight: 600,
@@ -168,7 +168,8 @@ const useStyles = makeStyles((theme) => ({
   card: {
     border: '1px solid #00dfc8',
     borderRadius: '9px',
-    backgroundColor: '#000000'
+    backgroundColor: '#000000',
+    margin: 20,
   },
   cardContent: {
     padding: 10
@@ -444,7 +445,7 @@ export default function Landing() {
         1390 руб/мес
       </Typography>
       {plans &&
-        <Grid container spacing={5} alignItems="flex-end">
+        <Grid container alignItems="flex-end">
           {plans.map((row, index) => (
             // Enterprise card is full width at sm breakpoint
             <Grid item key={index} xs={12} sm={6} md={4}>

@@ -227,7 +227,7 @@ const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelco
                     </Button>
                 }
             />
-            <Typography className={classes.helpText}>Если у вас что-то не получается, пожалуйста напишите в  телеграм <a href="https://t.me/dlyakin" target="_blank">@dlyakin</a></Typography>
+            <Typography className={classes.helpText}>Если у вас что-то не получается, пожалуйста напишите в  телеграм <a href="https://t.me/dlyakin" target="_blank" rel="noopener noreferrer">@dlyakin</a></Typography>
             {<SearchTikTokAccauntDialog open={open} onClose={handleClose} />}
         </Container >
     )
