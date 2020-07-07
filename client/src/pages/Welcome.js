@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
     },
     content: {
         marginBottom: 20,
+    },
+    helpText: {
+        marginTop: 20,
     }
 }))
 
@@ -82,6 +85,10 @@ const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelco
     }
 
     const handleBack = () => {
+        if (activeStep === 3 && user.defaultAccauntId) {
+            setActiveStep((prevActiveStep) => prevActiveStep - 2)
+            return
+        }
         setActiveStep((prevActiveStep) => prevActiveStep - 1)
     }
 
@@ -120,7 +127,7 @@ const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelco
         setLoading(true)
         fetchData()
         setLoading(false)
-    }, [user])
+    }, [user, history, setWelcome])
 
     useEffect(() => {
 
@@ -220,6 +227,7 @@ const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelco
                     </Button>
                 }
             />
+            <Typography className={classes.helpText}>Если у вас что-то не получается, пожалуйста напишите в  телеграм <a href="https://t.me/dlyakin" target="_blank">@dlyakin</a></Typography>
             {<SearchTikTokAccauntDialog open={open} onClose={handleClose} />}
         </Container >
     )
