@@ -190,7 +190,7 @@ const User = ({ user, updateUserData, accaunts, loadAccaunts, setDefaultAccauntI
                     Реферальная программа
                 </Typography>
                 <CardContent>
-                    {userData.refsCount && <Typography>Количество регистраций: {userData.refsCount}</Typography>}
+                    <Typography>{`Количество регистраций: ${userData.refsCount}`}</Typography>
                     <Input
                         id="refLink"
                         inputRef={refLinkRef}
@@ -199,7 +199,6 @@ const User = ({ user, updateUserData, accaunts, loadAccaunts, setDefaultAccauntI
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
-                                    aria-label="toggle password visibility"
                                     onClick={copyToClipboard}
                                 >
                                     <FileCopyIcon />
