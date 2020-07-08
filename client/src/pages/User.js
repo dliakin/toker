@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { updateUserData, setDefaultAccauntId } from '../redux/actions/userActions'
 import { loadAccaunts } from '../redux/actions/accauntActions'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { TextField, Container, Typography, Card, CardContent, CardActions, Button, makeStyles, InputLabel, Select, MenuItem } from '@material-ui/core'
+import { TextField, Container, Typography, Card, CardContent, CardActions, Button, makeStyles, InputLabel, Select, MenuItem, IconButton, Input, InputAdornment } from '@material-ui/core'
 import AuthApi from '../axios/auth'
 import TelegramLoginButton from 'react-telegram-login'
+import FileCopyIcon from '@material-ui/icons/FileCopy'
 
 const useStyles = makeStyles((theme) => ({
     container: {
         paddingTop: 20,
+        marginBottom: 104,
     },
     sub: {
         marginTop: 20,
@@ -23,6 +25,7 @@ const User = ({ user, updateUserData, accaunts, loadAccaunts, setDefaultAccauntI
     const classes = useStyles()
     const [isEdit, setIsEdit] = useState(false)
     const [userData, setUserData] = useState(null)
+    const refLinkRef = useRef(null)
 
     const [form, setForm] = useState({
         email: user.email, password: ''
@@ -66,6 +69,11 @@ const User = ({ user, updateUserData, accaunts, loadAccaunts, setDefaultAccauntI
     const handleChange = async (event) => {
         if (event.target.value !== -1)
             await setDefaultAccauntId(event.target.value, user.token)
+    }
+
+    const copyToClipboard = (e) => {
+        refLinkRef.current.select()
+        document.execCommand('copy')
     }
 
     return (
@@ -175,6 +183,30 @@ const User = ({ user, updateUserData, accaunts, loadAccaunts, setDefaultAccauntI
                         ))}
 
                     </Select>
+                </CardContent>
+            </Card>}
+            {userData && <Card className={classes.sub}>
+                <Typography>
+                    Реферальная программа
+                </Typography>
+                <CardContent>
+                    {userData.refsCount && <Typography>Количество регистраций: {userData.refsCount}</Typography>}
+                    <Input
+                        id="refLink"
+                        inputRef={refLinkRef}
+                        value={`https://toker.team?ref=${user.userId}`}
+                        readOnly={true}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={copyToClipboard}
+                                >
+                                    <FileCopyIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                    />
                 </CardContent>
             </Card>}
         </Container >
