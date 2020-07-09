@@ -31,6 +31,10 @@ const createPay = async (plan_id, user_id, coupon) => {
         plan.price = plan.price - 989 * plan.duration
     }
 
+    if (req.query.coupon == "5465") {
+        plan.price = plan.price - 100 * plan.duration
+    }
+
     const url = `https://shipe.ru/chat/pay_travel.php?key=${config.get("tinkoffKey")}&func=gUP&mail=${user.email}&id=${prefix}_${pay.id}_${plan.id}&summ=${plan.price * 100}&lang=ru`
 
     const dataText = await r2(url).text
