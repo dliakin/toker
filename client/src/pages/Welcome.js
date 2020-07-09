@@ -176,7 +176,7 @@ const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelco
                                 type="password"
                                 autoComplete="off"
                                 onChange={changeHandler}
-                            />
+                            /><br/>
                             <TextField
                                 id="password_repeat"
                                 name="password_repeat"
