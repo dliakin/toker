@@ -31,7 +31,7 @@ const createPay = async (plan_id, user_id, coupon) => {
         plan.price = plan.price - 989 * plan.duration
     }
 
-    if (req.query.coupon == "5465") {
+    if (coupon == "5465") {
         plan.price = plan.price - 100 * plan.duration
     }
 
