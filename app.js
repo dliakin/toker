@@ -77,23 +77,23 @@ var saveStats = new CronJob('0 0 */1 * * *', async function () {
             }
         })
         accaunts.forEach(async accaunt => {
-			try{
-				const newAccauntData = await TikTokScraper.getUserProfileInfo(accaunt.uniqueId, { proxy: config.get('proxy') })
-				accauntData = await models.AccauntData.create({
-					accauntId: accaunt.id,
-					following: newAccauntData.following,
-					fans: newAccauntData.fans,
-					heart: newAccauntData.heart,
-					video: newAccauntData.video,
-					digg: newAccauntData.digg,
-				})
-			}catch(error){
-				//TODO Надо как-то понимать что пользователь действительно не существует, а это не ошибка доступа к ТикТоку
-				console.log(`Deactivate user: ${accaunt.uniqueId}`)
-				console.log(error)
-				//accaunt.active=0
-				//accaunt.save()
-			}
+            try {
+                const newAccauntData = await TikTokScraper.getUserProfileInfo(accaunt.uniqueId, { proxy: config.get('proxy') })
+                accauntData = await models.AccauntData.create({
+                    accauntId: accaunt.id,
+                    following: newAccauntData.following,
+                    fans: newAccauntData.fans,
+                    heart: newAccauntData.heart,
+                    video: newAccauntData.video,
+                    digg: newAccauntData.digg,
+                })
+            } catch (error) {
+                //TODO Надо как-то понимать что пользователь действительно не существует, а это не ошибка доступа к ТикТоку
+                console.log(`Deactivate user: ${accaunt.uniqueId}`)
+                console.log(error)
+                //accaunt.active=0
+                //accaunt.save()
+            }
         })
     } catch (error) {
         //TODO обработать ошибку
@@ -270,7 +270,7 @@ if (process.env.NODE_ENV === 'production') {
         console.log('Express HTTPS server listening on port 443...');
     })
 
-    bot.telegram.setWebhook(`${config.get('baseUrl')}/DHfjchjlHcj`)
+    bot.telegram.setWebhook(`${config.get('baseUrl')}:5001/DHfjchjlHcj`)
 
     telegramApp.use(bot.webhookCallback('/DHfjchjlHcj'))
     telegramApp.listen(5001, () => {
