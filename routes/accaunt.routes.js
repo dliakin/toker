@@ -173,6 +173,7 @@ router.get(
             const accaunt = await TikTokScraper.getUserProfileInfo(req.params.username, { proxy: config.get('proxy') });
             res.json(accaunt)
         } catch (error) {
+            console.log(error)
             res.status(500).json({ message: `Что-то пошло не так, попробуйте снова` })
         }
     })

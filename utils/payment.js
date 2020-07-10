@@ -2,7 +2,7 @@ const config = require('config')
 const r2 = require('r2')
 const models = require('../models')
 
-const createPay = async (plan_id, user_id, coupon) => {
+const createPay = async (plan_id, user_id, coupon = null) => {
 
     const prefix = `toker${process.env.NODE_ENV}`
 
@@ -35,8 +35,9 @@ const createPay = async (plan_id, user_id, coupon) => {
         plan.price = plan.price - 100 * plan.duration
     }
 
-    const url = `https://shipe.ru/chat/pay_travel.php?key=${config.get("tinkoffKey")}&func=gUP&mail=${user.email}&id=${prefix}_${pay.id}_${plan.id}&summ=${plan.price * 100}&lang=ru`
+    if (plan.price < 1) { plan.price = 1 }
 
+    const url = `https://shipe.ru/chat/pay_travel.php?key=${config.get("tinkoffKey")}&func=gUP&mail=${user.email}&id=${prefix}_${pay.id}_${plan.id}&summ=${plan.price * 100}&lang=ru`
     const dataText = await r2(url).text
     const data = JSON.parse(dataText)
     pay.paymentid = data.PaymentId

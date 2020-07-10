@@ -27,6 +27,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment-timezone": "^0.5.31",
     "mysql2": "^2.1.0",
+    "ngrok": "^3.2.7",
     "nodemailer": "^6.4.10",
     "r2": "^2.0.1",
     "sequelize": "^5.22.3",

@@ -5,16 +5,23 @@ const cors = require('cors')
 const http = require('http')
 const https = require('https')
 const Telegram = require('telegraf/telegram')
+const Telegraf = require('telegraf')
 const CronJob = require('cron').CronJob
 const TikTokScraper = require('tiktok-scraper')
 const fs = require('fs')
 var moment = require('moment-timezone')
 const { Op } = require('sequelize')
 const models = require('./models')
+const Extra = require('telegraf/extra')
+const Markup = require('telegraf/markup')
+const ngrok = require('ngrok')
+const createPay = require('./utils/payment')
 
-httpApp = express()
+var httpApp = express()
 const app = express()
+const telegramApp = express()
 const telegram = new Telegram(config.get("telegramToken"))
+const bot = new Telegraf(config.get("telegramToken"))
 
 app.use(cors())
 app.use(express.json({ extended: true }))
@@ -32,6 +39,35 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const PORT = config.get('port') || 5000
+
+bot.on('callback_query', async (ctx) => {
+    // Explicit usage
+    const telegramUser = await models.TelegramUser.findOne({
+        where: {
+            telegramId: ctx.callbackQuery.from.id
+        }
+    })
+
+    if (telegramUser) {
+
+        const pay = await models.Pay.findOne({
+            where: {
+                userId: telegramUser.userId
+                , active: true
+            }
+        })
+
+        const planAndCoupon = ctx.callbackQuery.data.split("_")
+        var coupon = null
+        if (pay) { coupon = planAndCoupon[1] }
+        console.log(coupon)
+        const payurl = await createPay(planAndCoupon[0], telegramUser.userId, coupon)
+        ctx.reply(`Ссылка на оплату:\n${payurl}`)
+    } else {
+        ctx.reply(`Вы не зарегистрированы в приложении. Напишите @dlyakin`)
+    }
+    ctx.answerCbQuery("Формирую ссылку на оплату")
+})
 
 var saveStats = new CronJob('0 0 */1 * * *', async function () {
     try {
@@ -86,16 +122,30 @@ var remindSubExpiried = new CronJob('0 0 12 * * *', async function () {
 
                     telegramUser = user.TelegramUser
 
+                    const plans = await models.Plan.findAll()
+
+                    var buttons = []
+                    for (var i = 0; i < plans.length; i++) {
+                        plan = plans[i]
+                        //Хардкодим купон, т.к. он всегдабудет применяться
+                        plan.price = plan.price - 100 * plan.duration
+                        buttons.push(new Array(Markup.callbackButton(
+                            `${plan.duration} ${plan.duration === 1 ? " МЕСЯЦ" : plan.duration > 1 && plan.duration < 5 ? " МЕСЯЦА" : " МЕСЯЦЕВ"} ${plan.price} руб.`
+                            , `${plan.id}_lastchance`
+                        )))
+                    }
+
                     var options = {
                         parse_mode: "HTML"
                         , disable_web_page_preview: true
+                        , reply_markup: Markup.inlineKeyboard(buttons)
                     }
 
                     telegram.sendMessage(telegramUser.telegramId,
                         `Здравствуйте! \n\n`
                         + `У вас заканчивается подписка в клуб через ${days} ${days === 1 ? "день" : days === 3 ? "дня" : "дней"}\n`
                         + `Успейте продлить со скидкой 🤗\n`
-                        + `<a href="https://toker.team/plans?coupon=lastchance">Продлить</a>`
+                        //+ `<a href="https://toker.team/plans?coupon=lastchance">Продлить</a>`
                         , options)
 
                     telegram.sendMessage(139253874,
@@ -206,12 +256,33 @@ if (process.env.NODE_ENV === 'production') {
 
     http.createServer(httpApp).listen(httpApp.get('port'), function () {
         console.log('Express HTTP server listening on port ' + httpApp.get('port'));
-    });
+    })
 
     https.createServer(credentials, app).listen(443, function () {
         console.log('Express HTTPS server listening on port 443...');
-    });
+    })
+
+    bot.telegram.setWebhook(`${config.get(baseUrl)}/DHfjchjlHcj`)
+
+    telegramApp.use(bot.webhookCallback('/DHfjchjlHcj'))
+    telegramApp.listen(5001, () => {
+        console.log('Telegram bot listening on port 5001!')
+    })
+
 
 } else {
+    (async function () {
+        const url = await ngrok.connect(5001)
+
+        bot.telegram.setWebhook(`${url}/DHfjchjlHcj`)
+
+        telegramApp.use(bot.webhookCallback('/DHfjchjlHcj'))
+        telegramApp.listen(5001, () => {
+            console.log('Telegram bot listening on port 5001!')
+        })
+
+    })()
+
     app.listen(PORT, () => console.log(`App has been started on port ${PORT}...`))
+
 }
