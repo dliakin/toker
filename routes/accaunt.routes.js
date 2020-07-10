@@ -197,17 +197,18 @@ router.post(
 
             var accauntData = await models.AccauntData.findOne({
                 where: {
-                    [Op.and]: [
-                        { accauntId: id },
-                        where(fn('DATE_FORMAT', col('createdAt'), '%Y-%m-%d %H:00:00'), fn('DATE_FORMAT', userAccaunt.updatedAt, '%Y-%m-%d %H:00:00'))
-                    ]
+                         accauntId: id
                 }
+				,order: [
+					['createdAt', 'DESC'],
+				],
             })
 
             const goal_start_fans = accauntData.fans
 
             res.status(201).json({ goal_start_fans, goal: userAccaunt.goal })
         } catch (error) {
+			console.log(error)
             res.status(500).json({ message: `Что-то пошло не так, попробуйте снова` })
         }
     })

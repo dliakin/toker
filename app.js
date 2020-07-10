@@ -77,16 +77,24 @@ var saveStats = new CronJob('0 0 */1 * * *', async function () {
             }
         })
         accaunts.forEach(async accaunt => {
-            const newAccauntData = await TikTokScraper.getUserProfileInfo(accaunt.uniqueId, { proxy: config.get('proxy') })
-            accauntData = await models.AccauntData.create({
-                accauntId: accaunt.id,
-                following: newAccauntData.following,
-                fans: newAccauntData.fans,
-                heart: newAccauntData.heart,
-                video: newAccauntData.video,
-                digg: newAccauntData.digg,
-            })
-        });
+			try{
+				const newAccauntData = await TikTokScraper.getUserProfileInfo(accaunt.uniqueId, { proxy: config.get('proxy') })
+				accauntData = await models.AccauntData.create({
+					accauntId: accaunt.id,
+					following: newAccauntData.following,
+					fans: newAccauntData.fans,
+					heart: newAccauntData.heart,
+					video: newAccauntData.video,
+					digg: newAccauntData.digg,
+				})
+			}catch(error){
+				//TODO Надо как-то понимать что пользователь действительно не существует, а это не ошибка доступа к ТикТоку
+				console.log(`Deactivate user: ${accaunt.uniqueId}`)
+				console.log(error)
+				//accaunt.active=0
+				//accaunt.save()
+			}
+        })
     } catch (error) {
         //TODO обработать ошибку
         console.log(error)
