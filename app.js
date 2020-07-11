@@ -270,13 +270,17 @@ if (process.env.NODE_ENV === 'production') {
         console.log('Express HTTPS server listening on port 443...');
     })
 
-    bot.telegram.setWebhook(`${config.get('baseUrl')}:5001/DHfjchjlHcj`)
+    bot.telegram.setWebhook(`${config.get('baseUrl')}:88/DHfjchjlHcj`)
+
+    telegramApp.get('/', (req, res) => {
+        res.send('Hello World!')
+      })
 
     telegramApp.use(bot.webhookCallback('/DHfjchjlHcj'))
-    telegramApp.listen(5001, () => {
-        console.log('Telegram bot listening on port 5001!')
+    
+    https.createServer(credentials, telegramApp).listen(88, function () {
+        console.log('Telegram bot listening on port 88...');
     })
-
 
 } else {
     (async function () {
