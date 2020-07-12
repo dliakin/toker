@@ -66,7 +66,7 @@ const Dashboard = ({ token }) => {
                                         </TableCell>
                                         <TableCell align="right">{row.email}</TableCell>
                                         <TableCell align="right">{row.tel}</TableCell>
-                                        <TableCell align="right">{row.TelegramUser.username || row.telegramName}</TableCell>
+                                        <TableCell align="right">{(row.TelegramUser && row.TelegramUser.username) || row.telegramName}</TableCell>
                                         <TableCell align="right">{row.utm}</TableCell>
                                     </TableRow>
                                     <TableRow key={`pays_${row.id}`}>
