@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const { QueryTypes } = require('sequelize')
 var moment = require('moment-timezone')
-const { Op } = require('sequelize')
+const { fn, col } = require('sequelize')
 const models = require('../models')
 const auth = require('../middleware/auth.middleware')
 const admin = require('../middleware/admin.middleware')
@@ -15,9 +15,23 @@ router.get(
     async (req, res) => {
         try {
             var users = await models.User.findAll({
-                include: [
-                    { model: models.Pay, }
-                    ,{model: models.TelegramUser,}
+                attributes: ['id', 'email', 'tel', 'telegramName', 'utm']
+                , include: [
+                    {
+                        model: models.Pay,
+                        attributes: [
+                            'id',
+                            [fn('date_format', col('Pays.createdAt'), '%Y-%m-%d'), 'createdAt'],
+                            [fn('date_format', col('Pays.paidTo'), '%Y-%m-%d'), 'paidTo'],
+                            'realSum',
+                            'active'
+                        ]
+
+                    }
+                    , {
+                        model: models.TelegramUser,
+                        attributes: ['username']
+                    }
                 ]
             })
             res.json(users)
