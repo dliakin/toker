@@ -11,6 +11,7 @@ import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
 import Landing from './pages/Landing'
 import Welcome from './pages/Welcome'
+import Dashboard from './admin/pages/Dashboard'
 
 export const useRoutes = (isAuthenticated, needPay, welcome) => {
     if (isAuthenticated) {
@@ -60,6 +61,9 @@ export const useRoutes = (isAuthenticated, needPay, welcome) => {
                     </Route>
                     <Route path="/welcome" exact>
                         <Welcome />
+                    </Route>
+                    <Route path="/admin/dashboard" exact>
+                        <Dashboard />
                     </Route>
                     <Redirect to="/accaunts" />
                 </Switch>
