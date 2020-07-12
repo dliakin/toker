@@ -34,7 +34,23 @@ router.get(
                     }
                 ]
             })
-            res.json(users)
+
+            var data = []
+            users.forEach(user => {
+                const id = user.id
+                const email = user.email
+
+                const activePay = user.Pays.filter(obj => { return obj.active === true })
+                const paidTo = (activePay[0] && activePay[0].paidTo) || `заявка`
+
+                const tel = user.tel
+                const telegramUser = (user.TelegramUser && user.TelegramUser.username) || user.telegramName
+                const telegramCotected = !!user.TelegramUser
+                const utm = user.utm
+                data.push({ id, email, paidTo, tel, telegramUser, telegramCotected, utm, pays: user.Pays })
+            })
+
+            res.json(data)
         } catch (error) {
             console.log(error)
             res.status(500).json({ message: `Что-то пошло не так, попробуйте снова` })
