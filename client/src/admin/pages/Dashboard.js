@@ -48,9 +48,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-
-
-
 const Dashboard = ({ token }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
@@ -88,10 +85,7 @@ const Dashboard = ({ token }) => {
                                 if (term === 'оплата') {
                                     return rowData.paidTo !== 'заявка'
                                 }
-                                if (term === 'заявка') {
-                                    return term === rowData.paidTo
-                                }
-                                return true
+                                return term === rowData.paidTo
                             },
                             defaultFilter: 'оплата'
                         },
@@ -102,7 +96,8 @@ const Dashboard = ({ token }) => {
                     data={data}
                     options={{
                         sorting: true,
-                        filtering: true
+                        filtering: true,
+                        pageSize: 20,
                     }}
                     detailPanel={rowData => {
                         return (
