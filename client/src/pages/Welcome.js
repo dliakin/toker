@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { updateUserData, setDefaultAccauntId, setWelcome } from '../redux/actions/userActions'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { TextField, Container, Typography, Card, CardContent, Button, makeStyles, Paper, MobileStepper, ListItem, ListItemAvatar, Avatar, ListItemText } from '@material-ui/core'
 import AuthApi from '../axios/auth'
@@ -8,6 +8,7 @@ import TelegramLoginButton from 'react-telegram-login'
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons'
 import SearchTikTokAccauntDialog from '../components/SearchTikTokAccauntDialog'
 import ReactPlayer from 'react-player'
+import { NEED_PAY } from '../redux/types'
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -48,6 +49,7 @@ const stepsHeaders = [
 const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelcome }) => {
     const classes = useStyles()
     const history = useHistory()
+    const dispatch = useDispatch()
     const [userData, setUserData] = useState(null)
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
@@ -121,13 +123,15 @@ const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelco
                     return
                 }
             } catch (error) {
-
+                if (error.response.status === 402) {
+                    dispatch({ type: NEED_PAY })
+                }
             }
         }
         setLoading(true)
         fetchData()
         setLoading(false)
-    }, [user, history, setWelcome])
+    }, [user, history, setWelcome, dispatch])
 
     useEffect(() => {
 
@@ -176,7 +180,7 @@ const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelco
                                 type="password"
                                 autoComplete="off"
                                 onChange={changeHandler}
-                            /><br/>
+                            /><br />
                             <TextField
                                 id="password_repeat"
                                 name="password_repeat"
