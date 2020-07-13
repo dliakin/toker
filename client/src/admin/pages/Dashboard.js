@@ -69,7 +69,6 @@ const Dashboard = ({ token }) => {
     }, [token, dispatch])
 
     if (data) {
-        console.log(data)
         return (
             <Container className={classes.container}>
                 <MaterialTable
