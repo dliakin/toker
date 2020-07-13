@@ -9,6 +9,7 @@
     "client": "npm run start --prefix client",
     "client:install": "npm install --prefix client",
     "client:build": "npm run build --prefix client",
+    "client:deploy": "concurrently -m 1 \"npm run build --prefix client\" \"rm -rf ./client/app\" \"cp -r ./client/build ./client/app/\"",
     "dev": "cross-env NODE_ENV=development concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [
