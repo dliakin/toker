@@ -156,7 +156,7 @@ const User = ({ user, updateUserData, accaunts, loadAccaunts, setDefaultAccauntI
                 </Typography>
                 <CardContent>
                     {userData.tgUser ? <Typography>Логин в телеграм: {userData.tgUser}</Typography>
-                        : <Button variant="contained" color="secondary" href={`https://t.me/dasha_cher_journal_bot?start=${user.userId}`} target="_blank" rel="noopener noreferrer">
+                        : <Button variant="contained" color="secondary" href={`https://t.me/tokerteambot?start=${user.userId}`} target="_blank" rel="noopener noreferrer">
                             Подключить
                         </Button>
                     }
