@@ -111,7 +111,7 @@ const Welcome = ({ user, setWelcome }) => {
                     <Typography>
                         Чат нашего клуба находится в Телеграм, для того что-бы получить доступ - напишите нашему боту. Нажмите на ссылку ниже:
                        <br />
-                        <Button variant="contained" color="primary" href={`https://t.me/dasha_cher_journal_bot?start=${user.userId}`} target="_blank" rel="noopener noreferrer">
+                        <Button variant="contained" color="primary" href={`https://t.me/tokerteambot?start=${user.userId}`} target="_blank" rel="noopener noreferrer">
                             Получить доступ
                         </Button>
                     </Typography>
