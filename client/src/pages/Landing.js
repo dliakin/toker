@@ -145,7 +145,6 @@ const useStyles = makeStyles((theme) => ({
     color: 'rgb(254, 47, 87)',
     fontSize: '28px',
     textTransform: 'uppercase',
-    height: '37px',
     fontFamily: 'Roboto,Arial,sans-serif',
     fontWeight: 600,
   },
@@ -439,11 +438,11 @@ export default function Landing() {
         Ты упустишь возможность, о которой будешь жалеть.
       </Typography>
       <Typography component="h2" className={classes.title} id="plans">
-        Стоимость клуба
+        Стоимость курса с доступом в клуб
       </Typography>
-      <Typography component="h2" className={classes.oldprice}>
+      {/* <Typography component="h2" className={classes.oldprice}>
         1390 руб/мес
-      </Typography>
+      </Typography> */}
       {plans &&
         <Grid container alignItems="flex-end">
           {plans.map((row, index) => (
@@ -451,22 +450,19 @@ export default function Landing() {
             <Grid item key={index} xs={12} sm={6} md={4}>
               <Card key={row.id} className={classes.card}>
                 <CardHeader
-                  title={row.duration + (row.duration === 1 ? " МЕСЯЦ" : row.duration > 1 && row.duration < 5 ? " МЕСЯЦА" : " МЕСЯЦЕВ")}
+                  title={"КУРС + " + row.duration + (row.duration === 1 ? " МЕСЯЦ" : row.duration > 1 && row.duration < 5 ? " МЕСЯЦА" : " МЕСЯЦЕВ") + " КЛУБА"}
                   titleTypographyProps={{ align: 'center', }}
                   className={classes.cardHeader}
                 />
                 <CardContent className={classes.cardContent}>
                   <div className={classes.cardPricing}>
                     <Typography className={classes.cardPricingText}>
-                      {row.price / row.duration}
-                    </Typography>
-                    <Typography className={classes.cardPricingText}>
-                      {" руб/месяц"}
+                      {row.price + row.fee + " руб"}
                     </Typography>
                   </div>
                   <div className={classes.cardPricingTotal}>
                     <Typography >
-                      {row.price + " руб"}
+                      {row.fee + " + " + row.price / row.duration + " руб/мес"}
                     </Typography>
                   </div>
                 </CardContent>

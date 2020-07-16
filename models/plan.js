@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     role: DataTypes.INTEGER,
     duration: DataTypes.INTEGER,
     active: DataTypes.INTEGER,
-    price: DataTypes.INTEGER
+    price: DataTypes.INTEGER,
+    fee: DataTypes.INTEGER,
   }, {});
   Plan.associate = function(models) {
     // associations can be defined here

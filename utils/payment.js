@@ -1,8 +1,9 @@
 const config = require('config')
 const r2 = require('r2')
 const models = require('../models')
+const { Op } = require('sequelize')
 
-const createPay = async (plan_id, user_id, coupon = null) => {
+const createPay = async (plan_id, user_id, coupon = null, fee = false) => {
 
     const prefix = `toker${process.env.NODE_ENV}`
 
@@ -33,6 +34,20 @@ const createPay = async (plan_id, user_id, coupon = null) => {
 
     if (coupon == "5465") {
         plan.price = plan.price - 100 * plan.duration
+    }
+
+    //TODO Вынести это условие в роуты
+    const existPay = await models.Pay.findOne({
+        where: {
+            userId: user_id,
+            active: {
+                [Op.not]: null
+            }
+        }
+    })
+
+    if (fee || !existPay) {
+        plan.price = plan.price + plan.fee
     }
 
     if (plan.price < 1) { plan.price = 1 }

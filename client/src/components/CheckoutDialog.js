@@ -92,7 +92,7 @@ const CheckoutDialog = (props) => {
                 <List disablePadding>
                     <ListItem className={classes.listItem} key={plan.id}>
                         <ListItemText primary={plan.name} secondary={plan.description} />
-                        <Typography variant="body2">{plan.price} руб</Typography>
+                        <Typography variant="body2">{plan.price + plan.fee} руб</Typography>
                     </ListItem>
                 </List>
                 <Divider />
