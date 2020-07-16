@@ -12,6 +12,7 @@ import SignIn from './pages/SignIn'
 import Landing from './pages/Landing'
 import Welcome from './pages/Welcome'
 import Dashboard from './admin/pages/Dashboard'
+import SuccessTg from './pages/SuccessTg'
 
 export const useRoutes = (isAuthenticated, needPay, welcome) => {
     if (isAuthenticated) {
@@ -33,6 +34,9 @@ export const useRoutes = (isAuthenticated, needPay, welcome) => {
                 <Switch>
                     <Route path="/welcome" exact>
                         <Welcome />
+                    </Route>
+                    <Route path="/tglink_ok" exact>
+                        <SuccessTg />
                     </Route>
                     <Redirect to="/welcome" />
                 </Switch>
@@ -64,6 +68,9 @@ export const useRoutes = (isAuthenticated, needPay, welcome) => {
                     </Route>
                     <Route path="/admin/dashboard" exact>
                         <Dashboard />
+                    </Route>
+                    <Route path="/tglink_ok" exact>
+                        <SuccessTg />
                     </Route>
                     <Redirect to="/accaunts" />
                 </Switch>

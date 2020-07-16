@@ -22,6 +22,7 @@ const app = express()
 const telegramApp = express()
 const telegram = new Telegram(config.get("telegramToken"))
 const bot = new Telegraf(config.get("telegramToken"))
+var url2 = config.get('baseUrl')
 
 app.use(cors())
 app.use(express.json({ extended: true }))
@@ -40,6 +41,73 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const PORT = config.get('port') || 5000
+
+//TODO Банить тех, кого нет в БД
+// {
+//        message_id: 3208,
+//        from: {
+//          id: 1000352699,
+//          is_bot: false,
+//          first_name: 'TikTok Channel Admin',
+//          username: 'tiktok_channels_admin'
+//        },
+//        chat: {
+//          id: -1001185920407,
+//          title: 'Клуб ТИКТОК � ЧАТ',
+//          type: 'supergroup'
+//        },
+//        date: 1594826654,
+//        new_chat_participant: {
+//          id: 1000352699,
+//          is_bot: false,
+//          first_name: 'TikTok Channel Admin',
+//          username: 'tiktok_channels_admin'
+//        },
+//        new_chat_member: {
+//          id: 1000352699,
+//          is_bot: false,
+//          first_name: 'TikTok Channel Admin',
+//          username: 'tiktok_channels_admin'
+//        },
+//        new_chat_members: [
+//          {
+//            id: 1000352699,
+//            is_bot: false,
+//            first_name: 'TikTok Channel Admin',
+//            username: 'tiktok_channels_admin'
+//          }
+//        ]
+//      }
+bot.on('new_chat_members', async (ctx) => {
+    const existingTelegramUser = await models.TelegramUser.findOne({
+        where: {
+            telegramId: ctx.update.message.from.id
+        }
+    })
+
+    if (!existingTelegramUser) {
+        await telegram.kickChatMember(ctx.update.message.chat.id, ctx.update.message.from.id)
+
+        telegram.sendMessage(ctx.update.message.from.id,
+            `Здравствуйте! \n\n`
+            + `У вас нет доступа в клуб\n`
+            + `Получить доступ:\n`
+            + `https://toker.team/\n`
+            + `По любым вопросам пишите @dlyakin\n`
+        )
+    }
+})
+
+bot.start(async (ctx) => {
+    console.log(ctx.startPayload)
+    const keyboard = Markup.inlineKeyboard([
+        Markup.loginButton('Получить доступ', `${url2}/api/auth/linktg?user_id=${ctx.startPayload}`, {
+            bot_username: config.get('botName'),
+            request_write_access: true
+        }),
+    ])
+    return ctx.reply('Нажмите, что бы получить доступ:', Extra.markup(keyboard))
+})
 
 bot.on('callback_query', async (ctx) => {
     // Explicit usage
@@ -275,25 +343,30 @@ if (process.env.NODE_ENV === 'production') {
 
     telegramApp.get('/', (req, res) => {
         res.send('Hello World!')
-      })
+    })
 
     telegramApp.use(bot.webhookCallback('/DHfjchjlHcj'))
-    
+
     https.createServer(credentials, telegramApp).listen(88, function () {
         console.log('Telegram bot listening on port 88...');
     })
 
 } else {
     (async function () {
-        const url = await ngrok.connect(5001)
+        try {
+            await ngrok.authtoken('1eSdnYCyxIrQZdx3YEHg6TMZa43_3eCXW9vuC7weoFKXSZ5gc');
+            const url = await ngrok.connect(5001)
+            url2 = await ngrok.connect(5000)
+            console.log(url2)
+            bot.telegram.setWebhook(`${url}/DHfjchjlHcj`)
 
-        bot.telegram.setWebhook(`${url}/DHfjchjlHcj`)
-
-        telegramApp.use(bot.webhookCallback('/DHfjchjlHcj'))
-        telegramApp.listen(5001, () => {
-            console.log('Telegram bot listening on port 5001!')
-        })
-
+            telegramApp.use(bot.webhookCallback('/DHfjchjlHcj'))
+            telegramApp.listen(5001, () => {
+                console.log('Telegram bot listening on port 5001!')
+            })
+        } catch (error) {
+            console.log(error)
+        }
     })()
 
     app.listen(PORT, () => console.log(`App has been started on port ${PORT}...`))

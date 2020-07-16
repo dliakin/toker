@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { updateUserData, setDefaultAccauntId, setWelcome } from '../redux/actions/userActions'
+import { setWelcome } from '../redux/actions/userActions'
 import { connect, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { TextField, Container, Typography, Card, CardContent, Button, makeStyles, Paper, MobileStepper, ListItem, ListItemAvatar, Avatar, ListItemText } from '@material-ui/core'
+import { Container, Typography, Button, makeStyles, Paper, MobileStepper } from '@material-ui/core'
 import AuthApi from '../axios/auth'
-import TelegramLoginButton from 'react-telegram-login'
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons'
 import SearchTikTokAccauntDialog from '../components/SearchTikTokAccauntDialog'
-import ReactPlayer from 'react-player'
 import { NEED_PAY } from '../redux/types'
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +34,7 @@ const stepsHeaders = [
         label: 'Привяжите Телеграм'
     },
     {
-        label: 'Добавьте аккаунт ТикТок'
+        label: 'Добавьте на рабочий стол'
     },
     {
         label: 'Введите новый пароль'
@@ -46,39 +44,19 @@ const stepsHeaders = [
     },
 ]
 
-const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelcome }) => {
+const Welcome = ({ user, setWelcome }) => {
     const classes = useStyles()
     const history = useHistory()
     const dispatch = useDispatch()
     const [userData, setUserData] = useState(null)
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
-    const [form, setForm] = useState({
-        email: user.email, password: '', password_repeat: ''
-    })
-    const [error, setError] = useState({ show: false, text: '' })
 
     const [activeStep, setActiveStep] = useState(0)
-    const maxSteps = 5
+    const maxSteps = 2
 
     const handleNext = async () => {
-        if (activeStep === 1 && user.defaultAccauntId) {
-            setActiveStep((prevActiveStep) => prevActiveStep + 2)
-            return
-        }
-        if (activeStep === 2) {
-            await setDefaultAccauntId(accaunts[accaunts.length - 1].id, user.token)
-        }
-        if (activeStep === 3) {
-            if (form.password !== form.password_repeat) {
-                setError({ show: true, text: 'Пароли не совпадают' })
-                return
-            }
-            if (form.password !== "") {
-                await updateUserData(form, user.token)
-            }
-        }
-        if (activeStep === 4) {
+        if (activeStep === 1) {
             setWelcome(false)
             history.push('/accaunts')
             return
@@ -87,29 +65,11 @@ const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelco
     }
 
     const handleBack = () => {
-        if (activeStep === 3 && user.defaultAccauntId) {
-            setActiveStep((prevActiveStep) => prevActiveStep - 2)
-            return
-        }
         setActiveStep((prevActiveStep) => prevActiveStep - 1)
-    }
-
-    const handleTelegramResponse = async response => {
-        const data = await AuthApi.telegramLogin(response, user.token)
-        setUserData({ ...userData, tgUser: data.tgUser })
-    }
-
-    const handleClickOpen = () => {
-        setOpen(true)
     }
 
     const handleClose = () => {
         setOpen(false)
-    }
-
-    const changeHandler = event => {
-        setError({ show: false, text: '' })
-        setForm({ ...form, [event.target.name]: event.target.value })
     }
 
     useEffect(() => {
@@ -147,12 +107,16 @@ const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelco
                 {activeStep === 0 &&
                     <Typography>Я рада приветствовать вас в нашем клубе TOKER TEAM. Для завершения регистрации нужно выполнить несколько шагов.<br /><br />Нажимайте далее</Typography>
                 }
-                {activeStep === 1 ?
-                    userData.tgUser ? <Typography>Логин в телеграм: {userData.tgUser}</Typography>
-                        : <TelegramLoginButton dataOnauth={handleTelegramResponse} botName="tokerteambot" />
-                    : <></>
+                {activeStep === 1 &&
+                    <Typography>
+                        Чат нашего клуба находится в Телеграм, для того что-бы получить доступ - напишите нашему боту. Нажмите на ссылку ниже:
+                       <br />
+                        <Button variant="contained" color="primary" href={`https://t.me/dasha_cher_journal_bot?start=${user.userId}`} target="_blank" rel="noopener noreferrer">
+                            Получить доступ
+                        </Button>
+                    </Typography>
                 }
-                {activeStep === 2 &&
+                {/* {activeStep === 2 &&
                     <Button variant="contained" onClick={handleClickOpen}>{accaunts[accaunts.length - 1] ? "Изменить" : "Добавить"}</Button>
                 }
                 {activeStep === 2 && accaunts[accaunts.length - 1] &&
@@ -194,14 +158,14 @@ const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelco
                             />
                         </form>
                     </CardContent>
-                </Card>}
-                {activeStep === 4 && <ReactPlayer
+                </Card>} */}
+                {/* {activeStep === 2 && <ReactPlayer
                     url="https://dashacher.ru/app2.mp4"
                     playing={false}
                     height="480px"
                     width="100%"
                     controls={true}
-                />}
+                />} */}
             </div>
             <MobileStepper
                 steps={maxSteps}
@@ -217,7 +181,7 @@ const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelco
                             loading
                             || !userData
                             /*|| (activeStep === 1 && userData && !userData.tgUser)*/
-                            || (activeStep === 2 && !accaunts[accaunts.length - 1])
+                            //|| (activeStep === 2 && !accaunts[accaunts.length - 1])
                         }
                     >
                         {activeStep === maxSteps - 1 ? 'Завершить' : 'Далее'}
@@ -240,13 +204,10 @@ const Welcome = ({ user, accaunts, setDefaultAccauntId, updateUserData, setWelco
 const mapStateToProps = state => {
     return {
         user: state.user,
-        accaunts: state.accaunt.accaunts,
     }
 }
 
 const mapDispatchToProps = {
-    setDefaultAccauntId,
-    updateUserData,
     setWelcome,
 }
 

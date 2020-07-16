@@ -56,16 +56,6 @@ export default {
             },
         }),
 
-    telegramLogin: (data, token) =>
-        instance({
-            method: 'POST',
-            url: '/telegramLogin',
-            data,
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-        }),
-
     setDefaultAccauntId: (data, token) =>
         instance({
             method: 'POST',

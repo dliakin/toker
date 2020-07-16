@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { TextField, Container, Typography, Card, CardContent, CardActions, Button, makeStyles, InputLabel, Select, MenuItem, IconButton, Input, InputAdornment } from '@material-ui/core'
 import AuthApi from '../axios/auth'
-import TelegramLoginButton from 'react-telegram-login'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
 
 const useStyles = makeStyles((theme) => ({
@@ -37,10 +36,7 @@ const User = ({ user, updateUserData, accaunts, loadAccaunts, setDefaultAccauntI
         setForm({ ...form, [event.target.name]: event.target.value })
     }
 
-    const handleTelegramResponse = async response => {
-        const data = await AuthApi.telegramLogin(response, user.token)
-        setUserData({ ...userData, tgUser: data.tgUser })
-    }
+    //TODO Сделать привязку в ТГ
 
     useEffect(() => {
         async function fetchData() {
@@ -160,7 +156,9 @@ const User = ({ user, updateUserData, accaunts, loadAccaunts, setDefaultAccauntI
                 </Typography>
                 <CardContent>
                     {userData.tgUser ? <Typography>Логин в телеграм: {userData.tgUser}</Typography>
-                        : <TelegramLoginButton dataOnauth={handleTelegramResponse} botName="tokerteambot" />
+                        : <Button variant="contained" color="secondary" href={`https://t.me/dasha_cher_journal_bot?start=${user.userId}`} target="_blank" rel="noopener noreferrer">
+                            Подключить
+                        </Button>
                     }
                 </CardContent>
             </Card>}
