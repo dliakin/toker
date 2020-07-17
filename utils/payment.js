@@ -56,7 +56,7 @@ const createPay = async (plan_id, user_id, coupon = null, fee = false) => {
     const dataText = await r2(url).text
     const data = JSON.parse(dataText)
     pay.paymentid = data.PaymentId
-    pay.save()
+    await pay.save()
 
     return data.paymentUrl
 }
