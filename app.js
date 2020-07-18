@@ -79,22 +79,32 @@ const PORT = config.get('port') || 5000
 //        ]
 //      }
 bot.on('new_chat_members', async (ctx) => {
-    const existingTelegramUser = await models.TelegramUser.findOne({
-        where: {
-            telegramId: ctx.update.message.from.id
+    try {
+        const existingTelegramUser = await models.TelegramUser.findOne({
+            where: {
+                telegramId: ctx.update.message.from.id
+            }
+        })
+
+        if (!existingTelegramUser) {
+            await telegram.kickChatMember(ctx.update.message.chat.id, ctx.update.message.from.id)
+
+            telegram.sendMessage(ctx.update.message.from.id,
+                `Здравствуйте! \n\n`
+                + `У вас нет доступа в клуб\n`
+                + `Получить доступ:\n`
+                + `https://toker.team/\n`
+                + `По любым вопросам пишите @dlyakin\n`
+            )
+
+            telegram.sendMessage(139253874,
+                `ОШИБКА! Вход незарегистрированного пользователя \n\n`
+                + `Канал: ${ctx.update.message.chat.title}\n`
+                + `Пользователь: ${ctx.update.message.from.id} ${ctx.update.message.from.first_name} @${ctx.update.message.from.username}\n`
+            )
         }
-    })
-
-    if (!existingTelegramUser) {
-        await telegram.kickChatMember(ctx.update.message.chat.id, ctx.update.message.from.id)
-
-        telegram.sendMessage(ctx.update.message.from.id,
-            `Здравствуйте! \n\n`
-            + `У вас нет доступа в клуб\n`
-            + `Получить доступ:\n`
-            + `https://toker.team/\n`
-            + `По любым вопросам пишите @dlyakin\n`
-        )
+    } catch (error) {
+        console.log(error)
     }
 })
 
