@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const Dashboard = ({ token }) => {
+const AdminDashboard = ({ token }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const [data, setData] = useState()
@@ -134,4 +134,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, null)(Dashboard)
+export default connect(mapStateToProps, null)(AdminDashboard)

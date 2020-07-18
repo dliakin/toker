@@ -66,7 +66,7 @@ export default {
                 Authorization: `Bearer ${token}`
             },
         }),
-        
+
     delete: (id, token) =>
         instance({
             method: 'DELETE',
@@ -75,4 +75,14 @@ export default {
                 Authorization: `Bearer ${token}`
             },
         }),
+
+    getVideoDates: (token) =>
+        instance({
+            method: 'GET',
+            url: '/getVideoDates',
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        }),
+
 }

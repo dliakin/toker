@@ -7,6 +7,37 @@ const auth = require('../middleware/auth.middleware')
 const router = Router()
 const { where, fn, col, Op } = require('sequelize');
 
+router.get(
+    '/getVideoDates',
+    auth,
+    async (req, res) => {
+        try {
+            console.log(req.user.userId)
+            const user = await models.User.findOne({
+                where: {
+                    id: req.user.userId,
+                }
+            })
+
+            const videoDates = await models.AccauntVideo.findAll({
+                attributes: ['createTime'],
+                where: {
+                    accauntId: user.defaultAccauntId,
+                }
+            })
+
+            var return_data = []
+            videoDates.forEach(video => {
+                return_data.push(new Date(video.createTime.setHours(0, 0, 0, 0)).getTime())
+            });
+
+            res.json(return_data)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ message: `Что-то пошло не так, попробуйте снова` })
+        }
+    })
+
 router.post(
     '/add',
     auth,
@@ -105,7 +136,6 @@ router.get(
                     }
                 }]
             })
-
             if (!accaunt) {
                 return res.status(404).json({ message: `Аккаунт не найден` })
             }
@@ -197,18 +227,18 @@ router.post(
 
             var accauntData = await models.AccauntData.findOne({
                 where: {
-                         accauntId: id
+                    accauntId: id
                 }
-				,order: [
-					['createdAt', 'DESC'],
-				],
+                , order: [
+                    ['createdAt', 'DESC'],
+                ],
             })
 
             const goal_start_fans = accauntData.fans
 
             res.status(201).json({ goal_start_fans, goal: userAccaunt.goal })
         } catch (error) {
-			console.log(error)
+            console.log(error)
             res.status(500).json({ message: `Что-то пошло не так, попробуйте снова` })
         }
     })
@@ -231,6 +261,8 @@ router.delete(
             res.status(500).json({ message: `Что-то пошло не так, попробуйте снова` })
         }
     })
+
+
 
 
 

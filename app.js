@@ -170,6 +170,55 @@ var saveStats = new CronJob('0 0 */1 * * *', async function () {
     }
 }, null, true, 'Europe/Moscow')
 
+var saveNewVideos = new CronJob('0 0 */1 * * *', async function () {
+    try {
+        const accaunts = await models.User.findAll({
+            attributes: ['id'],
+            include: [
+                {
+                    model: models.Pay,
+                    attributes: [],
+                    where: {
+                        active: true
+                    }
+                },
+                {
+                    model: models.Accaunt,
+                    attributes: ['uniqueId', 'id'],
+                }
+            ],
+            where: {
+                defaultAccauntId: {
+                    [Op.not]: null
+                }
+
+            },
+            raw: true,
+        })
+        accaunts.forEach(async accaunt => {
+            try {
+                const newVideoList = await TikTokScraper.user(accaunt['Accaunts.uniqueId'], { proxy: config.get('proxy'), number: 3 })
+                newVideoList.collector.forEach(async video => {
+                    const accauntVideo = await models.AccauntVideo.findOrCreate({
+                        where: {
+                            videoId: video.id
+                        },
+                        defaults: {
+                            accauntId: accaunt['Accaunts.id']
+                            , createTime: moment.unix(video.createTime)
+                        }
+                    })
+                })
+            } catch (error) {
+                console.log(error)
+            }
+        })
+    } catch (error) {
+        //TODO обработать ошибку
+        console.log(error)
+    }
+}, null, true, 'Europe/Moscow')
+
 var remindSubExpiried = new CronJob('0 0 12 * * *', async function () {
     try {
         const users = await models.User.findAll({
@@ -230,6 +279,13 @@ var remindSubExpiried = new CronJob('0 0 12 * * *', async function () {
                         + `Email: ${user.email}\n`
                         + `Телеграм: @${telegramUser.username}\n`
                     )
+                } else {
+                    telegram.sendMessage(139253874,
+                        `ОШИБКА! Напоминание не отправлено! Не привязан телеграм!\n\n`
+                        + `Осталось: ${days} ${days === 1 ? "день" : days === 3 ? "дня" : "дней"}!\n\n`
+                        + `Email: ${user.email}\n`
+                        + `Телеграм: @${telegramUser.username}\n`
+                    )
                 }
             }
         })
@@ -247,7 +303,7 @@ var checkUsers = new CronJob('0 0 */1 * * *', async function () {
                     model: models.Pay,
                     where: {
                         active: true,
-                        paidTo: { [Op.lt]: new Date() } //TODO Это лишнее т.к. у нас всегда одна активная оплата
+                        paidTo: { [Op.lt]: new Date() }
                     }
                 },
                 {
@@ -283,16 +339,23 @@ var checkUsers = new CronJob('0 0 */1 * * *', async function () {
                     + `https://toker.team/`
                 )
             }
+            else {
+                telegram.sendMessage(139253874,
+                    `ОШИБКА! Пользователь не забанен! Не привязан телеграм!\n\n`
+                    + `Email: ${user.email}\n`
+                    + `Телеграм: @${telegramUser.username}\n`
+                )
+            }
 
             const pay = user.Pays[0]
             pay.active = false
-            pay.save()
+            await pay.save()
 
             telegram.sendMessage(139253874,
                 `Пользователь исключён из клуба!\n\n`
                 + `Оплата №${pay.id}\n`
                 + `Сумма: ${pay.realSum} руб\n`
-                + `Дата: ${moment(pay.updatedAt).format('YYYY-MM-DD HH:mm')}\n`
+                + `Дата: ${moment(pay.createdAt).format('YYYY-MM-DD HH:mm')}\n`
                 + `Email: ${user.email}\n`
                 + `Телеграм: @${telegramUser ? telegramUser.username : "Нет в Телеграм"}\n`
             )
@@ -309,6 +372,7 @@ async function start() {
         saveStats.start()
         checkUsers.start()
         remindSubExpiried.start()
+        saveNewVideos.start()
     } catch (error) {
         console.log('Server Error', error.message)
         process.exit(1)

@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import IconButton from '@material-ui/core/IconButton'
 import HomeIcon from '@material-ui/icons/Home'
+import DateRangeIcon from '@material-ui/icons/DateRange'
 import EqualizerIcon from '@material-ui/icons/Equalizer'
 import { Link } from 'react-router-dom'
 import { Toolbar } from '@material-ui/core'
@@ -24,8 +25,8 @@ export default function BottomNavbar() {
     return (
         <AppBar position="fixed" color="primary" className={classes.appBar}>
             <Toolbar>
-                <IconButton component={Link} to="/feed" className={classes.menuButton}>
-                    <HomeIcon />
+                <IconButton component={Link} to="/dashboard" className={classes.menuButton}>
+                    <DateRangeIcon />
                 </IconButton>
                 <IconButton component={Link} to="/accaunts" className={classes.menuButton}>
                     <EqualizerIcon />

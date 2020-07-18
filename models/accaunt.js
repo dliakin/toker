@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     Accaunt.belongsToMany(models.User, { through: 'UserAccaunt' })
     Accaunt.hasMany(models.UserAccaunt, {as: 'accauntExtra'})
     Accaunt.hasMany(models.AccauntData)
+    Accaunt.hasMany(models.AccauntVideo)
   }
   return Accaunt
 };

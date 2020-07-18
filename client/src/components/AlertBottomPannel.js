@@ -17,8 +17,6 @@ const useStyles = makeStyles({
     }
 })
 
-
-
 const AlertDialog = ({ token }) => {
     const classes = useStyles()
     const [alert, setAlert] = useState(null);
@@ -43,7 +41,7 @@ const AlertDialog = ({ token }) => {
 
     if (alert) {
         return (
-            <Container className={classes.root}>
+            <Container className={classes.root} maxWidth="false">
                 <Alert
                     className={classes.alert}
                     severity={alert.type}

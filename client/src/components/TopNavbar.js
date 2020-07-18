@@ -90,6 +90,9 @@ const TopNavbar = ({ logout }) => {
             case '/welcome':
                 headerText = 'Настройка приложения'
                 break
+            case '/dashboard':
+                headerText = 'Календарь постов'
+                break
             default:
                 headerText = ''
                 break
