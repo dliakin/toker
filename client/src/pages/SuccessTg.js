@@ -14,7 +14,7 @@ const SuccessTg = () => {
 
     return (
         <Container className={classes.container}>
-            <Typography>Телеграм подключён. </Typography>
+            <Typography>Телеграм подключён.<br/>Можно закрыть это окно...</Typography>
         </Container>
     )
 }

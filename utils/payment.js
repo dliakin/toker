@@ -36,6 +36,10 @@ const createPay = async (plan_id, user_id, coupon = null, fee = false) => {
         plan.price = plan.price - 100 * plan.duration
     }
 
+    if (coupon == "sale19") {
+        plan.fee = 0
+    }
+
     //TODO Вынести это условие в роуты
     const existPay = await models.Pay.findOne({
         where: {
