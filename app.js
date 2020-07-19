@@ -363,9 +363,6 @@ var checkUsers = new CronJob('0 0 */1 * * *', async function () {
 
             telegram.sendMessage(139253874,
                 `Пользователь исключён из клуба!\n\n`
-                + `Оплата №${pay.id}\n`
-                + `Сумма: ${pay.realSum} руб\n`
-                + `Дата: ${moment(pay.createdAt).format('YYYY-MM-DD HH:mm')}\n`
                 + `Email: ${user.email}\n`
                 + `Телеграм: @${telegramUser ? telegramUser.username : "Нет в Телеграм"}\n`
             )
