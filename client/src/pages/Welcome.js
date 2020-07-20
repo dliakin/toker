@@ -7,6 +7,7 @@ import AuthApi from '../axios/auth'
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons'
 import SearchTikTokAccauntDialog from '../components/SearchTikTokAccauntDialog'
 import { NEED_PAY } from '../redux/types'
+import { logout } from '../redux/actions/userActions'
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -85,6 +86,9 @@ const Welcome = ({ user, setWelcome }) => {
             } catch (error) {
                 if (error.response.status === 402) {
                     dispatch({ type: NEED_PAY })
+                }
+                if (error.response.data.error && error.response.data.error.name === 'TokenExpiredError') {
+                    dispatch(logout())
                 }
             }
         }
