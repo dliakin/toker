@@ -14,6 +14,7 @@ import Welcome from './pages/Welcome'
 import AdminDashboard from './admin/pages/AdminDashboard'
 import Dashboard from './pages/Dashboard'
 import SuccessTg from './pages/SuccessTg'
+import ResetPassword from './pages/ResetPassword'
 
 export const useRoutes = (isAuthenticated, needPay, welcome) => {
     if (isAuthenticated) {
@@ -92,6 +93,9 @@ export const useRoutes = (isAuthenticated, needPay, welcome) => {
             </Route>
             <Route path="/signin" exact>
                 <SignIn />
+            </Route>
+            <Route path="/reset" exact>
+                <ResetPassword />
             </Route>
             <Redirect to="/" />
         </Switch>

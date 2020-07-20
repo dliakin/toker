@@ -10,9 +10,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
-import { login } from '../redux/actions/userActions'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { Link as RLink } from 'react-router-dom'
+import AuthApi from '../axios/auth'
+import { showAlert } from '../redux/actions/systemActions'
 
 function Copyright() {
     return (
@@ -47,10 +48,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const SignIn = ({ login }) => {
+const ResetPassword = () => {
     const classes = useStyles()
-
-    const [form, setForm] = useState({ email: '', password: '' })
+    const dispatch = useDispatch()
+    const [form, setForm] = useState({ email: '' })
     const [isLoading, setIsLoading] = useState(false)
 
     const changeHandler = event => {
@@ -61,7 +62,8 @@ const SignIn = ({ login }) => {
         try {
             e.preventDefault()
             setIsLoading(true)
-            login({ ...form })
+            const data = await AuthApi.reset_password({ ...form })
+            dispatch(showAlert({ msg: data.message, type: 'info' }))
             setIsLoading(false)
         } catch (error) {
             setIsLoading(false)
@@ -76,7 +78,7 @@ const SignIn = ({ login }) => {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Вход
+                    Сброс пароля
         </Typography>
                 <form className={classes.form} noValidate>
                     <Grid container spacing={2}>
@@ -93,20 +95,6 @@ const SignIn = ({ login }) => {
                                 onChange={changeHandler}
                             />
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                value={form.password}
-                                onChange={changeHandler}
-                            />
-                        </Grid>
                     </Grid>
                     <Button
                         type="submit"
@@ -117,18 +105,13 @@ const SignIn = ({ login }) => {
                         onClick={registerHandler}
                         disabled={isLoading}
                     >
-                        Войти
-                    </Button>
+                        Сброс пароля
+          </Button>
                     <Grid container justify="flex-end">
-                        <Grid item xs>
-                            <Link component={RLink} to="/reset" variant="body2">
-                                {"Забыли пароль? Восстановить."}
-                            </Link>
-                        </Grid>
                         <Grid item>
-                            <Link component={RLink} to="/#plans" variant="body2">
-                                Нет аккаунта? Выбрать тариф
-                            </Link>
+                            <Link component={RLink} to="/signin" variant="body2">
+                                Есть аккаунт? Войти
+              </Link>
                         </Grid>
                     </Grid>
                 </form>
@@ -140,8 +123,4 @@ const SignIn = ({ login }) => {
     )
 }
 
-const mapDispatchToProps = {
-    login,
-}
-
-export default connect(null, mapDispatchToProps)(SignIn)
+export default connect(null, null)(ResetPassword)

@@ -29,6 +29,12 @@ export default {
             url: '/register',
             data
         }),
+    reset_password: (data) =>
+        instance({
+            method: 'POST',
+            url: '/reset_password',
+            data
+        }),
 
     login: (data) =>
         instance({
