@@ -42,6 +42,15 @@ if (process.env.NODE_ENV === 'production') {
 
 const PORT = config.get('port') || 5000
 
+bot.command('get_code', (ctx) => {
+    try {
+        ctx.reply(ctx.update.message.from.id)
+    } catch (error) {
+        console.log("Ошибка в боте. Команда get_code: ", error)
+    }
+
+})
+
 //TODO Банить тех, кого нет в БД
 // {
 //        message_id: 3208,
