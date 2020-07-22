@@ -41,9 +41,17 @@ router.get(
             })
 
             var totalPaidOutSum = 0
-
             var data = []
             partner[0].PartnerPays.forEach(pay => {
+                var utm = {}
+                var from = null
+                
+                if (pay.Pay.User.utm) {
+                    utm = JSON.parse(pay.Pay.User.utm)
+                }
+                if (utm.from) {
+                    from = utm.from
+                }
                 const id = pay.id
                 const email = pay.Pay.User.email
                 const paidOut = pay.paidOut
@@ -53,7 +61,7 @@ router.get(
                 if (!paidOut) {
                     totalPaidOutSum += paidOutSum
                 }
-                data.push({ id, email, paidOut, date, realSum, paidOutSum })
+                data.push({ id, email, paidOut, date, realSum, paidOutSum, from })
             })
             res.json({ data, totalPaidOutSum })
         } catch (error) {

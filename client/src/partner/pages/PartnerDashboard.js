@@ -38,7 +38,6 @@ const PartnerDashboard = ({ token }) => {
         async function fetchData() {
             try {
                 const data = await PartnerApi.pays(token)
-                console.log(data)
                 setData(data.data)
                 setTotalPaidOutSum(data.totalPaidOutSum)
             } catch (error) {
@@ -62,9 +61,9 @@ const PartnerDashboard = ({ token }) => {
         var filterData = data.filter(obj => {
             return (
                 obj.email.toLowerCase().includes(searchString.toLowerCase())
+                || (obj.from && obj.from.toLowerCase().includes(searchString.toLowerCase()))
             )
         })
-        console.log(filterData)
         return (
             <Container className={classes.container}>
                 <Card className={classes.filtersCard}>
@@ -78,7 +77,7 @@ const PartnerDashboard = ({ token }) => {
                     {filterData.map((row) => (
                         <div key={`item_${row.id}`}>
                             <ListItem key={row.id}>
-                                <ListItemText primary={row.email} secondary={row.date} />
+                                <ListItemText primary={row.email} secondary={`${row.date} ${row.from != null ? row.from : ""}`} />
                                 <ListItemSecondaryAction className={classes.pays}>
                                     <Typography color={!row.paidOut ? "secondary" : "primary"}>{!row.paidOut ? "+" : ""}{row.paidOutSum} ₽</Typography>
                                     <Typography >{row.realSum} ₽</Typography>
