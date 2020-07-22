@@ -1,50 +1,25 @@
-import React, { useState, useEffect, forwardRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect, useDispatch } from 'react-redux'
-import { Container, LinearProgress, makeStyles } from '@material-ui/core'
+import { Container, LinearProgress, makeStyles, ListItem, ListItemText, List, TextField, Card, CardContent, Chip } from '@material-ui/core'
 import AdminApi from '../../axios/admin'
 import { logout } from '../../redux/actions/userActions'
-import MaterialTable from 'material-table'
-
-import AddBox from '@material-ui/icons/AddBox';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
-import Check from '@material-ui/icons/Check';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import Clear from '@material-ui/icons/Clear';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
-import Edit from '@material-ui/icons/Edit';
-import FilterList from '@material-ui/icons/FilterList';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import Remove from '@material-ui/icons/Remove';
-import SaveAlt from '@material-ui/icons/SaveAlt';
-import Search from '@material-ui/icons/Search';
-import ViewColumn from '@material-ui/icons/ViewColumn';
-
-const tableIcons = {
-    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-};
 
 const useStyles = makeStyles((theme) => ({
     container: {
         paddingTop: 20,
         marginBottom: 104
+    },
+    search: {
+        width: "100%"
+    },
+    filtersCard: {
+        marginTop: 20
+    },
+    filtersContent: {
+        padding: 16,
+        "&:last-child": {
+            paddingBottom: 16
+        }
     },
 }))
 
@@ -52,6 +27,8 @@ const AdminDashboard = ({ token }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const [data, setData] = useState()
+    const [searchString, setSearchString] = useState("")
+    const [filters, setFilters] = useState({ pays: true, today: false })
 
     useEffect(() => {
 
@@ -68,57 +45,55 @@ const AdminDashboard = ({ token }) => {
         fetchData()
     }, [token, dispatch])
 
+    const handleChange = (e) => {
+        try {
+            setSearchString(e.target.value)
+        } catch (e) {
+            setSearchString("")
+        }
+    }
+
+    const handleClick = (name, value) => {
+        setFilters({ ...filters, [name]: value })
+    }
+
+
     if (data) {
+        var filterData = data.filter(obj => {
+            return (
+                (!filters.pays || (filters.pays && !obj.paidTo.toLowerCase().includes("заявка")))
+                && (obj.email.toLowerCase().includes(searchString.toLowerCase())
+                    || obj.id.toString().toLowerCase().includes(searchString.toLowerCase())
+                    || obj.paidTo.toLowerCase().includes(searchString.toLowerCase())
+                    || (obj.tel && obj.tel.toLowerCase().includes(searchString.toLowerCase()))
+                    || (obj.telegramUser && obj.telegramUser.toLowerCase().includes(searchString.toLowerCase()))
+                    || (obj.utm && obj.utm.toLowerCase().includes(searchString.toLowerCase()))
+                )
+            )
+        })
+        console.log(filterData)
         return (
             <Container className={classes.container}>
-                <MaterialTable
-                    icons={tableIcons}
-                    title="Все пользователи"
-                    columns={[
-                        { title: 'id', field: 'id', type: 'numeric', filtering: false },
-                        { title: 'Email', field: 'email', filtering: false },
-                        {
-                            title: 'Оплачено до',
-                            field: 'paidTo',
-                            customFilterAndSearch: (term, rowData) => {
-                                if (term === 'оплата') {
-                                    return rowData.paidTo !== 'заявка'
-                                }
-                                return term === rowData.paidTo
-                            },
-                            defaultFilter: 'оплата'
-                        },
-                        { title: 'Телефон', field: 'tel', filtering: false },
-                        { title: 'Телеграм', field: 'telegramUser', filtering: false },
-                        { title: 'UTM', field: 'utm', filtering: false },
-                    ]}
-                    data={data}
-                    options={{
-                        sorting: true,
-                        filtering: true,
-                        pageSize: 20,
-                    }}
-                    detailPanel={rowData => {
-                        return (
-                            <MaterialTable
-                                icons={tableIcons}
-                                title="Оплаты"
-                                columns={[
-                                    { title: 'id', field: 'id' },
-                                    { title: 'Создана', field: 'createdAt' },
-                                    { title: 'Оплачено до', field: 'paidTo' },
-                                    { title: 'Сумма', field: 'realSum' }
-                                ]}
-                                data={rowData.pays}
-                                options={{
-                                    sorting: true,
-                                    search: false,
-                                    toolbar: false
-                                }}
-                            />
-                        )
-                    }}
-                />
+                <TextField id="user-search" label="Поиск" type="search" variant="outlined" className={classes.search} onChange={handleChange} />
+                <Card className={classes.filtersCard}>
+                    <CardContent className={classes.filtersContent}>
+                        <Chip
+                            label="Оплаты"
+                            onClick={() => handleClick("pays", !filters.pays)}
+                            variant={filters.pays ? "default" : "outlined"}
+                            color="secondary"
+                            value={filters.pays}
+                            className={classes.filter}
+                        />
+                    </CardContent>
+                </Card>
+                <List >
+                    {filterData.map((row) => (
+                        <ListItem key={row.id}>
+                            <ListItemText primary={row.email} secondary={row.paidTo} />
+                        </ListItem>
+                    ))}
+                </List>
             </Container>
         )
     } else {
