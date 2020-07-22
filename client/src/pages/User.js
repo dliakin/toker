@@ -144,7 +144,7 @@ const User = ({ user, updateUserData, accaunts, loadAccaunts, setDefaultAccauntI
                         variant="contained"
                         color="secondary"
                         component={Link}
-                        to="/plans"
+                        to="/plans?coupon=lastchance"
                     >
                         Продлить
                     </Button>
