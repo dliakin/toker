@@ -4,6 +4,7 @@ const initialState = {
     userId: null,
     token: null,
     defaultAccauntId: null,
+    isPartner: false,
     needPay: false,
     welcome: null,
 }
@@ -16,7 +17,8 @@ export const userReducer = (state = initialState, action) => {
                 userId: action.payload.userId,
                 token: action.payload.token,
                 email: action.payload.email,
-                defaultAccauntId: action.payload.defaultAccauntId
+                defaultAccauntId: action.payload.defaultAccauntId,
+                isPartner: action.payload.isPartner
             }
         case REGISTER:
             return {
@@ -26,7 +28,7 @@ export const userReducer = (state = initialState, action) => {
                 email: action.payload.email,
             }
         case LOGOUT:
-            return { ...state, userId: null, token: null, email: null, defaultAccauntId: null, needPay: false }
+            return { ...state, userId: null, token: null, email: null, defaultAccauntId: null, needPay: false, isPartner: false }
         case UPDATE_USER_DATA:
             return { ...state, email: action.email }
         case SET_DEFAULT_ACCAUNT_ID:

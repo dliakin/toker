@@ -15,6 +15,7 @@ import AdminDashboard from './admin/pages/AdminDashboard'
 import Dashboard from './pages/Dashboard'
 import SuccessTg from './pages/SuccessTg'
 import ResetPassword from './pages/ResetPassword'
+import PartnerDashboard from './partner/pages/PartnerDashboard'
 
 export const useRoutes = (isAuthenticated, needPay, welcome) => {
     if (isAuthenticated) {
@@ -70,6 +71,9 @@ export const useRoutes = (isAuthenticated, needPay, welcome) => {
                     </Route>
                     <Route path="/admin/dashboard" exact>
                         <AdminDashboard />
+                    </Route>
+                    <Route path="/partner/dashboard" exact>
+                        <PartnerDashboard />
                     </Route>
                     <Route path="/dashboard" exact>
                         <Dashboard />

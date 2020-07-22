@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const TopNavbar = ({ logout }) => {
+const TopNavbar = ({ logout, isPartner }) => {
     const classes = useStyles()
     const history = useHistory()
     let location = useLocation()
@@ -59,6 +59,7 @@ const TopNavbar = ({ logout }) => {
             onClose={handleMenuClose}
         >
             <MenuItem component={Link} to="/user" onClick={handleMenuClose}>Профиль</MenuItem>
+            {isPartner && <MenuItem component={Link} to="/partner/dashboard" onClick={handleMenuClose}>Партнёрка</MenuItem>}
             <MenuItem onClick={logoutHandler}>Выйти</MenuItem>
         </Menu>
     )
@@ -92,6 +93,9 @@ const TopNavbar = ({ logout }) => {
                 break
             case '/dashboard':
                 headerText = 'Календарь постов'
+                break
+            case '/partner/dashboard':
+                headerText = 'Реферальная программа'
                 break
             default:
                 headerText = ''
@@ -132,8 +136,14 @@ const TopNavbar = ({ logout }) => {
     );
 }
 
+const mapStateToProps = state => {
+    return {
+        isPartner: state.user.isPartner,
+    }
+}
+
 const mapDispatchToProps = {
     logout
 }
 
-export default connect(null, mapDispatchToProps)(TopNavbar)
+export default connect(mapStateToProps, mapDispatchToProps)(TopNavbar)

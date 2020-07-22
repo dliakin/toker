@@ -32,6 +32,7 @@ app.use('/api/plan', require('./routes/plan.routes'))
 app.use('/api/feed', require('./routes/feed.routes'))
 app.use('/api/system', require('./routes/system.routes'))
 app.use('/api/admin', require('./routes/admin.routes'))
+app.use('/api/partner', require('./routes/partner.routes'))
 
 if (process.env.NODE_ENV === 'production') {
     app.use('/', express.static(path.join(__dirname, 'client', 'app')))

@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     active: DataTypes.BOOLEAN,
   }, {});
   Pay.associate = function (models) {
-    // associations can be defined here
+    Pay.belongsTo(models.User)
   };
   return Pay;
 };
