@@ -267,7 +267,7 @@ var remindSubExpiried = new CronJob('0 0 12 * * *', async function () {
                 if (user.TelegramUser !== null) {
 
                     telegramUser = user.TelegramUser
-
+                    console.log("remindSubExpiried: ", telegramUser)
                     const plans = await models.Plan.findAll()
 
                     var buttons = []
@@ -287,20 +287,20 @@ var remindSubExpiried = new CronJob('0 0 12 * * *', async function () {
                         , reply_markup: Markup.inlineKeyboard(buttons)
                     }
 
-                    telegram.sendMessage(telegramUser.telegramId,
+                    await telegram.sendMessage(telegramUser.telegramId,
                         `Здравствуйте! \n\n`
                         + `У вас заканчивается подписка в клуб через ${days} ${days === 1 ? "день" : days === 3 ? "дня" : "дней"}\n`
                         + `Успейте продлить со скидкой 🤗\n`
                         //+ `<a href="https://toker.team/plans?coupon=lastchance">Продлить</a>`
                         , options)
 
-                    telegram.sendMessage(139253874,
+                    await telegram.sendMessage(139253874,
                         `Отправлено напоминание за ${days} ${days === 1 ? "день" : days === 3 ? "дня" : "дней"}!\n\n`
                         + `Email: ${user.email}\n`
                         + `Телеграм: @${telegramUser.username}\n`
                     )
                 } else {
-                    telegram.sendMessage(139253874,
+                    await telegram.sendMessage(139253874,
                         `ОШИБКА! Напоминание не отправлено! Не привязан телеграм!\n\n`
                         + `Осталось: ${days} ${days === 1 ? "день" : days === 3 ? "дня" : "дней"}!\n\n`
                         + `Email: ${user.email}\n`
