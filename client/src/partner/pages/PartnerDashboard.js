@@ -3,6 +3,7 @@ import { connect, useDispatch } from 'react-redux'
 import { Container, LinearProgress, makeStyles, ListItem, ListItemText, List, TextField, ListItemSecondaryAction, Typography, Divider, Card, CardContent } from '@material-ui/core'
 import PartnerApi from '../../axios/partner'
 import { logout } from '../../redux/actions/userActions'
+import PullToRefresh from 'rmc-pull-to-refresh'
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -24,11 +25,18 @@ const useStyles = makeStyles((theme) => ({
             paddingBottom: 16
         }
     },
+    paidOut: {
+        fontFamily: 'Roboto,Helvetica Neue,Arial,sans-serif',
+    },
+    realSum: {
+        fontFamily: 'Roboto,Helvetica Neue,Arial,sans-serif',
+    },
 }))
 
 const PartnerDashboard = ({ token }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
+    const [refreshing, setRefreshing] = useState(false)
     const [data, setData] = useState()
     const [totalPaidOutSum, setTotalPaidOutSum] = useState(0)
     const [searchString, setSearchString] = useState("")
@@ -66,27 +74,44 @@ const PartnerDashboard = ({ token }) => {
         })
         return (
             <Container className={classes.container}>
-                <Card className={classes.filtersCard}>
-                    <CardContent className={classes.filtersContent}>
-                        К выплате: {totalPaidOutSum} ₽
-                    </CardContent>
-                </Card>
-                <TextField id="user-search" label="Поиск" type="search" variant="outlined" className={classes.search} onChange={handleChange} />
+                <PullToRefresh
+                    direction="down"
+                    refreshing={refreshing}
+                    onRefresh={async () => {
+                        const data = await PartnerApi.pays(token)
+                        setData(data.data)
+                        setTotalPaidOutSum(data.totalPaidOutSum)
+                        setRefreshing(true)
+                        setTimeout(() => {
+                            setRefreshing(false)
+                        }, 1000);
+                    }}
+                    indicator={{ activate: <></>, deactivate: <></>, release: <LinearProgress />, finish: <></> }}
+                    damping={150}
+                >
+                    <Card className={classes.filtersCard}>
+                        <CardContent className={classes.filtersContent}>
+                            <Typography display="inline">К выплате: </Typography>
+                            <Typography display="inline" color="secondary">{totalPaidOutSum} ₽</Typography>
+                        </CardContent>
+                    </Card>
+                    <TextField id="user-search" label="Поиск" type="search" variant="outlined" className={classes.search} onChange={handleChange} />
 
-                <List >
-                    {filterData.map((row) => (
-                        <div key={`item_${row.id}`}>
-                            <ListItem key={row.id}>
-                                <ListItemText primary={row.email} secondary={`${row.date} ${row.from != null ? row.from : ""}`} />
-                                <ListItemSecondaryAction className={classes.pays}>
-                                    <Typography color={!row.paidOut ? "secondary" : "primary"}>{!row.paidOut ? "+" : ""}{row.paidOutSum} ₽</Typography>
-                                    <Typography >{row.realSum} ₽</Typography>
-                                </ListItemSecondaryAction>
-                            </ListItem>
-                            <Divider key={`divider_${row.id}`} />
-                        </div >
-                    ))}
-                </List>
+                    <List >
+                        {filterData.map((row) => (
+                            <div key={`item_${row.id}`}>
+                                <ListItem key={row.id}>
+                                    <ListItemText primary={row.email} secondary={`${row.date} ${row.from != null ? row.from : ""}`} />
+                                    <ListItemSecondaryAction className={classes.pays}>
+                                        <Typography className={classes.paidOut} color={!row.paidOut ? "secondary" : "primary"}>{!row.paidOut ? "+" : ""}{row.paidOutSum} ₽</Typography>
+                                        <Typography className={classes.realSum} >{row.realSum} ₽</Typography>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                                <Divider key={`divider_${row.id}`} />
+                            </div >
+                        ))}
+                    </List>
+                </PullToRefresh>
             </Container>
         )
     } else {
