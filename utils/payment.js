@@ -29,6 +29,7 @@ const createPay = async (plan_id, user_id, coupon = null, fee = false) => {
     }
 
     if (coupon === "SJDHjiNXUIXNnndU") {
+        plan.fee = 0
         plan.price = plan.price - 989 * plan.duration
     }
 
