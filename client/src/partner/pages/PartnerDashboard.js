@@ -92,7 +92,7 @@ const PartnerDashboard = ({ token }) => {
                     <Card className={classes.filtersCard}>
                         <CardContent className={classes.filtersContent}>
                             <Typography display="inline">К выплате: </Typography>
-                            <Typography display="inline" color="secondary">{totalPaidOutSum} ₽</Typography>
+                            <Typography className={classes.paidOut} display="inline" color="secondary">{totalPaidOutSum} ₽</Typography>
                         </CardContent>
                     </Card>
                     <TextField id="user-search" label="Поиск" type="search" variant="outlined" className={classes.search} onChange={handleChange} />
