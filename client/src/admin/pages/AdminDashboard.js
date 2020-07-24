@@ -40,7 +40,7 @@ const AdminDashboard = ({ token }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const [data, setData] = useState()
-    const [searchString, setSearchString] = useState("")
+    const [filterData, setFilterData] = useState()
 
     useEffect(() => {
 
@@ -48,6 +48,7 @@ const AdminDashboard = ({ token }) => {
             try {
                 const data = await AdminApi.pays(token)
                 setData(data)
+                setFilterData(data)
             } catch (error) {
                 if (error.response.data.error && error.response.data.error.name === 'TokenExpiredError') {
                     dispatch(logout())
@@ -57,24 +58,25 @@ const AdminDashboard = ({ token }) => {
         fetchData()
     }, [token, dispatch])
 
-    const handleChange = (e) => {
+    const handleChange = async (e) => {
         try {
-            setSearchString(e.target.value)
+            const searchString = e.target.value
+            var tempFilterData = await data.filter(obj => {
+                return (
+                    obj.email.toLowerCase().includes(searchString.toLowerCase())
+                    || obj.id.toString().toLowerCase().includes(searchString.toLowerCase())
+                    || obj.createdAt.toLowerCase().includes(searchString.toLowerCase())
+                    || (obj.utm && obj.utm.toLowerCase().includes(searchString.toLowerCase())
+                    )
+                )
+            })
+            setFilterData(tempFilterData)
         } catch (e) {
-            setSearchString("")
+            setFilterData(data)
         }
     }
 
-    if (data) {
-        var filterData = data.filter(obj => {
-            return (
-                obj.email.toLowerCase().includes(searchString.toLowerCase())
-                || obj.id.toString().toLowerCase().includes(searchString.toLowerCase())
-                || obj.createdAt.toLowerCase().includes(searchString.toLowerCase())
-                || (obj.utm && obj.utm.toLowerCase().includes(searchString.toLowerCase())
-                )
-            )
-        })
+    if (filterData) {
         console.log(filterData)
         return (
             <Container className={classes.container}>
