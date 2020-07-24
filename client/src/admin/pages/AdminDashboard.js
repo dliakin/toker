@@ -75,7 +75,7 @@ const AdminDashboard = ({ token }) => {
                 )
             )
         })
-        console.log(filterData[10])
+        console.log(filterData)
         return (
             <Container className={classes.container}>
                 <TextField id="user-search" label="Поиск" type="search" variant="outlined" className={classes.search} onChange={handleChange} />
