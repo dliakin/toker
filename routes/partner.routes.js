@@ -38,6 +38,9 @@ router.get(
                 where: {
                     userId: req.user.userId,
                 },
+                order: [
+                    ['PartnerPays', 'createdAt', 'DESC'],
+                ],
             })
 
             var totalPaidOutSum = 0
@@ -45,7 +48,7 @@ router.get(
             partner[0].PartnerPays.forEach(pay => {
                 var utm = {}
                 var from = null
-                
+
                 if (pay.Pay.User.utm) {
                     utm = JSON.parse(pay.Pay.User.utm)
                 }
