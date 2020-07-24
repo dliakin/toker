@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { connect, useDispatch } from 'react-redux'
-import { Container, LinearProgress, makeStyles, TextField, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper } from '@material-ui/core'
+import { Container, LinearProgress, makeStyles, TextField, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, Link } from '@material-ui/core'
 import AdminApi from '../../axios/admin'
 import { logout } from '../../redux/actions/userActions'
 
@@ -64,12 +64,12 @@ const AdminDashboard = ({ token }) => {
             return (
                 obj.email.toLowerCase().includes(searchString.toLowerCase())
                 || obj.id.toString().toLowerCase().includes(searchString.toLowerCase())
-                || obj['Pays.createdAt'].toLowerCase().includes(searchString.toLowerCase())
+                || obj.createdAt.toLowerCase().includes(searchString.toLowerCase())
                 || (obj.utm && obj.utm.toLowerCase().includes(searchString.toLowerCase())
                 )
             )
         })
-        console.log(filterData)
+        console.log(filterData[0].telegram)
         return (
             <Container className={classes.container}>
                 <TextField id="user-search" label="Поиск" type="search" variant="outlined" className={classes.search} onChange={handleChange} />
@@ -80,17 +80,37 @@ const AdminDashboard = ({ token }) => {
                             <TableRow>
                                 <TableCell align="left" className={classes.cell}>Id</TableCell>
                                 <TableCell align="left" className={classes.cell}>Email</TableCell>
-                                <TableCell align="left" className={classes.cell}>Дата</TableCell>
-                                <TableCell align="right" className={classes.cell}>Сумма</TableCell>
+                                <TableCell align="left" className={classes.cell}>Сумма</TableCell>
+                                <TableCell align="left" className={classes.cell}>Дата Оплаты</TableCell>
+                                <TableCell align="left" className={classes.cell}>Доступ До</TableCell>
+                                <TableCell align="left" className={classes.cell}>From</TableCell>
+                                <TableCell align="left" className={classes.cell}>Ref</TableCell>
+                                <TableCell align="left" className={classes.cell}>Телефон</TableCell>
+                                <TableCell align="left" className={classes.cell}>Телеграм</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {filterData.map((row) => (
-                                <TableRow key={`${row.id}_${row['Pays.id']}`}>
+                                <TableRow key={`${row.id}_${row.payId}`}>
                                     <TableCell align="left" className={classes.cell}>{row.id}</TableCell>
                                     <TableCell align="left" className={classes.cell}>{row.email}</TableCell>
-                                    <TableCell align="left" className={classes.cell}>{row['Pays.createdAt']}</TableCell>
-                                    <TableCell align="right" className={classes.cell}>{row['Pays.realSum']}</TableCell>
+                                    <TableCell align="left" className={classes.cell}>{row.realSum}</TableCell>
+                                    <TableCell align="left" className={classes.cell}>{row.createdAt}</TableCell>
+                                    <TableCell align="left" className={classes.cell}>{row.paidTo}</TableCell>
+                                    <TableCell align="left" className={classes.cell}>{row.from}</TableCell>
+                                    <TableCell align="left" className={classes.cell}>{row.ref}</TableCell>
+                                    <TableCell align="left" className={classes.cell}>{row.tel}</TableCell>
+                                    <TableCell align="left" className={classes.cell}>
+                                        {row.telegramCotected
+                                            ? <Link href={`https://t.me/${row.telegram.username}`} >
+                                                @{row.telegram.username}
+                                            </Link>
+                                            : row.telegram.username ? row.telegram.username
+                                                : row.telegram.first_name || row.telegram.last_name
+                                                    ? `${row.telegram.first_name && row.telegram.first_name} ${row.telegram.last_name && row.telegram.last_name}`
+                                                    : 'не привязан'
+                                        }
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -111,4 +131,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, null)(AdminDashboard)
+export default connect(mapStateToProps, null)(AdminDashboard)       
