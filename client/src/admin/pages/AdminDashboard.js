@@ -28,6 +28,12 @@ const useStyles = makeStyles((theme) => ({
     tablecontainer: {
         marginTop: 20
     },
+    noTgLink: {
+        color: "red"
+    },
+    tgLink: {
+        color: "blue"
+    }
 }))
 
 const AdminDashboard = ({ token }) => {
@@ -69,7 +75,7 @@ const AdminDashboard = ({ token }) => {
                 )
             )
         })
-        console.log(filterData[0].telegram)
+        console.log(filterData[10])
         return (
             <Container className={classes.container}>
                 <TextField id="user-search" label="Поиск" type="search" variant="outlined" className={classes.search} onChange={handleChange} />
@@ -102,13 +108,22 @@ const AdminDashboard = ({ token }) => {
                                     <TableCell align="left" className={classes.cell}>{row.tel}</TableCell>
                                     <TableCell align="left" className={classes.cell}>
                                         {row.telegramCotected
-                                            ? <Link href={`https://t.me/${row.telegram.username}`} >
-                                                @{row.telegram.username}
-                                            </Link>
-                                            : row.telegram.username ? row.telegram.username
-                                                : row.telegram.first_name || row.telegram.last_name
-                                                    ? `${row.telegram.first_name && row.telegram.first_name} ${row.telegram.last_name && row.telegram.last_name}`
-                                                    : 'не привязан'
+                                            ? <div className={classes.tgLink}>{
+                                                row.telegram.username
+                                                    ? <Link href={`https://t.me/${row.telegram.username}`} >
+                                                        @{row.telegram.username}
+                                                    </Link>
+                                                    : row.telegram.first_name || row.telegram.last_name
+                                                        ? `${row.telegram.first_name !== null ? row.telegram.first_name : ''} ${row.telegram.last_name !== null ? row.telegram.last_name : ''}`
+                                                        : row.telegramName
+                                                            ? row.telegramName
+                                                            : 'Привязан'
+                                            }</div>
+                                            : <div className={classes.noTgLink}>{
+                                                row.telegramName
+                                                    ? row.telegramName
+                                                    : 'Не привязан'
+                                            }</div>
                                         }
                                     </TableCell>
                                 </TableRow>

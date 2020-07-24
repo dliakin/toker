@@ -82,7 +82,7 @@ router.get(
                     },
                     {
                         model: models.TelegramUser,
-                        attributes: ['username', 'first_name', 'last_name']
+                        attributes: ['telegramId', 'username', 'first_name', 'last_name']
                     }
 
                 ],
@@ -125,10 +125,9 @@ router.get(
 
                 const tel = pay.tel
 
-                const telegram = { username: pay['TelegramUser.username'] || pay.telegramName, first_name: pay['TelegramUser.first_name'], last_name: pay['TelegramUser.last_name'] }
-                console.log(telegram)
-                const telegramCotected = !!pay['TelegramUser.username']
-                data.push({ id, payId, email, realSum, createdAt, paidTo, from, ref, tel, telegram, telegramCotected })
+                const telegram = { username: pay['TelegramUser.username'], first_name: pay['TelegramUser.first_name'], last_name: pay['TelegramUser.last_name'] }
+                const telegramCotected = !!pay['TelegramUser.telegramId']
+                data.push({ id, payId, email, realSum, createdAt, paidTo, from, ref, tel, telegram, telegramName: [pay.telegramName], telegramCotected })
             })
             res.json(data)
         } catch (error) {
