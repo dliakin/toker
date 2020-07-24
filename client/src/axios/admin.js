@@ -31,4 +31,12 @@ export default {
                 Authorization: `Bearer ${token}`
             },
         }),
+    pays: (token) =>
+        instance({
+            method: 'GET',
+            url: `/pays`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        }),
 }

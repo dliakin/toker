@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const { QueryTypes } = require('sequelize')
 var moment = require('moment-timezone')
-const { fn, col } = require('sequelize')
+const { fn, col, Op } = require('sequelize')
 const models = require('../models')
 const auth = require('../middleware/auth.middleware')
 const admin = require('../middleware/admin.middleware')
@@ -51,6 +51,42 @@ router.get(
             })
 
             res.json(data)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ message: `Что-то пошло не так, попробуйте снова` })
+        }
+    })
+
+router.get(
+    '/pays',
+    auth,
+    admin,
+    async (req, res) => {
+        try {
+            var pays = await models.User.findAll({
+                attributes: ['id', 'email', 'utm']
+                , include: [
+                    {
+                        model: models.Pay,
+                        attributes: [
+                            'id',
+                            [fn('date_format', col('Pays.createdAt'), '%Y-%m-%d'), 'createdAt'],
+                            'realSum',
+                        ],
+                        where: {
+                            realSum: {
+                                [Op.not]: null,
+                            }
+                        }
+                    }
+
+                ],
+                order: [
+                    [models.Pay, 'createdAt', 'DESC'],
+                ],
+                raw: true
+            })
+            res.json(pays)
         } catch (error) {
             console.log(error)
             res.status(500).json({ message: `Что-то пошло не так, попробуйте снова` })

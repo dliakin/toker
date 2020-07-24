@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const TopNavbar = ({ logout, isPartner }) => {
+const TopNavbar = ({ logout, isPartner, isAdmin }) => {
     const classes = useStyles()
     const history = useHistory()
     let location = useLocation()
@@ -60,6 +60,7 @@ const TopNavbar = ({ logout, isPartner }) => {
         >
             <MenuItem component={Link} to="/user" onClick={handleMenuClose}>Профиль</MenuItem>
             {isPartner && <MenuItem component={Link} to="/partner/dashboard" onClick={handleMenuClose}>Партнёрка</MenuItem>}
+            {isPartner && <MenuItem component={Link} to="/admin/dashboard" onClick={handleMenuClose}>Оплаты</MenuItem>}
             <MenuItem onClick={logoutHandler}>Выйти</MenuItem>
         </Menu>
     )
@@ -139,6 +140,7 @@ const TopNavbar = ({ logout, isPartner }) => {
 const mapStateToProps = state => {
     return {
         isPartner: state.user.isPartner,
+        isAdmin: state.user.isAdmin,
     }
 }
 

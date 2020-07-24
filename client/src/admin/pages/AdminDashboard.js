@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { connect, useDispatch } from 'react-redux'
-import { Container, LinearProgress, makeStyles, ListItem, ListItemText, List, TextField, Card, CardContent, Chip } from '@material-ui/core'
+import { Container, LinearProgress, makeStyles, TextField, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper } from '@material-ui/core'
 import AdminApi from '../../axios/admin'
 import { logout } from '../../redux/actions/userActions'
 
@@ -21,6 +21,13 @@ const useStyles = makeStyles((theme) => ({
             paddingBottom: 16
         }
     },
+    cell: {
+        paddingRight: 2,
+        paddingLeft: 2,
+    },
+    tablecontainer: {
+        marginTop: 20
+    },
 }))
 
 const AdminDashboard = ({ token }) => {
@@ -28,13 +35,12 @@ const AdminDashboard = ({ token }) => {
     const dispatch = useDispatch()
     const [data, setData] = useState()
     const [searchString, setSearchString] = useState("")
-    const [filters, setFilters] = useState({ pays: true, today: false })
 
     useEffect(() => {
 
         async function fetchData() {
             try {
-                const data = await AdminApi.dashboard(token)
+                const data = await AdminApi.pays(token)
                 setData(data)
             } catch (error) {
                 if (error.response.data.error && error.response.data.error.name === 'TokenExpiredError') {
@@ -53,21 +59,13 @@ const AdminDashboard = ({ token }) => {
         }
     }
 
-    const handleClick = (name, value) => {
-        setFilters({ ...filters, [name]: value })
-    }
-
-
     if (data) {
         var filterData = data.filter(obj => {
             return (
-                (!filters.pays || (filters.pays && !obj.paidTo.toLowerCase().includes("заявка")))
-                && (obj.email.toLowerCase().includes(searchString.toLowerCase())
-                    || obj.id.toString().toLowerCase().includes(searchString.toLowerCase())
-                    || obj.paidTo.toLowerCase().includes(searchString.toLowerCase())
-                    || (obj.tel && obj.tel.toLowerCase().includes(searchString.toLowerCase()))
-                    || (obj.telegramUser && obj.telegramUser.toLowerCase().includes(searchString.toLowerCase()))
-                    || (obj.utm && obj.utm.toLowerCase().includes(searchString.toLowerCase()))
+                obj.email.toLowerCase().includes(searchString.toLowerCase())
+                || obj.id.toString().toLowerCase().includes(searchString.toLowerCase())
+                || obj['Pays.createdAt'].toLowerCase().includes(searchString.toLowerCase())
+                || (obj.utm && obj.utm.toLowerCase().includes(searchString.toLowerCase())
                 )
             )
         })
@@ -75,25 +73,29 @@ const AdminDashboard = ({ token }) => {
         return (
             <Container className={classes.container}>
                 <TextField id="user-search" label="Поиск" type="search" variant="outlined" className={classes.search} onChange={handleChange} />
-                <Card className={classes.filtersCard}>
-                    <CardContent className={classes.filtersContent}>
-                        <Chip
-                            label="Оплаты"
-                            onClick={() => handleClick("pays", !filters.pays)}
-                            variant={filters.pays ? "default" : "outlined"}
-                            color="secondary"
-                            value={filters.pays}
-                            className={classes.filter}
-                        />
-                    </CardContent>
-                </Card>
-                <List >
-                    {filterData.map((row) => (
-                        <ListItem key={row.id}>
-                            <ListItemText primary={row.email} secondary={row.paidTo} />
-                        </ListItem>
-                    ))}
-                </List>
+
+                <TableContainer component={Paper} className={classes.tablecontainer}>
+                    <Table size="small" >
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align="left" className={classes.cell}>Id</TableCell>
+                                <TableCell align="left" className={classes.cell}>Email</TableCell>
+                                <TableCell align="left" className={classes.cell}>Дата</TableCell>
+                                <TableCell align="right" className={classes.cell}>Сумма</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {filterData.map((row) => (
+                                <TableRow key={`${row.id}_${row['Pays.id']}`}>
+                                    <TableCell align="left" className={classes.cell}>{row.id}</TableCell>
+                                    <TableCell align="left" className={classes.cell}>{row.email}</TableCell>
+                                    <TableCell align="left" className={classes.cell}>{row['Pays.createdAt']}</TableCell>
+                                    <TableCell align="right" className={classes.cell}>{row['Pays.realSum']}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Container>
         )
     } else {
