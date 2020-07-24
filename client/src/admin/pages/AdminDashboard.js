@@ -58,10 +58,10 @@ const AdminDashboard = ({ token }) => {
         fetchData()
     }, [token, dispatch])
 
-    const handleChange = async (e) => {
+    const handleChange = (e) => {
         try {
             const searchString = e.target.value
-            var tempFilterData = await data.filter(obj => {
+            const tempFilterData = data.filter(obj => {
                 return (
                     obj.email.toLowerCase().includes(searchString.toLowerCase())
                     || obj.id.toString().toLowerCase().includes(searchString.toLowerCase())

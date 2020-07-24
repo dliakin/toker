@@ -21,8 +21,8 @@ router.get(
                         model: models.Pay,
                         attributes: [
                             'id',
-                            [fn('date_format', col('PartnerPays->Pay.createdAt'), '%Y-%m-%d'), 'createdAt'],
-                            [fn('date_format', col('PartnerPays->Pay.paidTo'), '%Y-%m-%d'), 'paidTo'],
+                            [fn('date_format', col('PartnerPays->Pay.createdAt'), '%Y-%m-%d %H:%i'), 'createdAt'],
+                            [fn('date_format', col('PartnerPays->Pay.paidTo'), '%Y-%m-%d %H:%i'), 'paidTo'],
                             'realSum',
                             'active',
                             'realSum'

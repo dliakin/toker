@@ -70,8 +70,8 @@ router.get(
                         model: models.Pay,
                         attributes: [
                             'id',
-                            [fn('date_format', col('Pays.createdAt'), '%Y-%m-%d'), 'createdAt'],
-                            [fn('date_format', col('Pays.paidTo'), '%Y-%m-%d'), 'paidTo'],
+                            [fn('date_format', col('Pays.createdAt'), '%Y-%m-%d %H:%i'), 'createdAt'],
+                            [fn('date_format', col('Pays.paidTo'), '%Y-%m-%d %H:%i'), 'paidTo'],
                             'realSum',
                         ],
                         where: {
