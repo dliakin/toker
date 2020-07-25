@@ -122,6 +122,9 @@ router.get(
                 if (utm.ref) {
                     ref = utm.ref
                 }
+                if (utm.refChecked) {
+                    ref = utm.refChecked
+                }
 
                 const tel = pay.tel
 
