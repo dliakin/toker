@@ -266,8 +266,7 @@ var remindSubExpiried = new CronJob('0 0 12 * * *', async function () {
             if (days === 7 || days === 3 || days === 1) {
                 if (user.TelegramUser !== null) {
 
-                    telegramUser = user.TelegramUser
-                    console.log("remindSubExpiried: ", telegramUser)
+                    let telegramUser = user.TelegramUser
                     const plans = await models.Plan.findAll()
 
                     var buttons = []
@@ -286,7 +285,6 @@ var remindSubExpiried = new CronJob('0 0 12 * * *', async function () {
                         , disable_web_page_preview: true
                         , reply_markup: Markup.inlineKeyboard(buttons)
                     }
-
                     await telegram.sendMessage(telegramUser.telegramId,
                         `Здравствуйте! \n\n`
                         + `У вас заканчивается подписка в клуб через ${days} ${days === 1 ? "день" : days === 3 ? "дня" : "дней"}\n`
@@ -304,7 +302,7 @@ var remindSubExpiried = new CronJob('0 0 12 * * *', async function () {
                         `ОШИБКА! Напоминание не отправлено! Не привязан телеграм!\n\n`
                         + `Осталось: ${days} ${days === 1 ? "день" : days === 3 ? "дня" : "дней"}!\n\n`
                         + `Email: ${user.email}\n`
-                        + `Телеграм: @${telegramUser.username}\n`
+                        + `Телеграм: @${user.TelegramUser.username || user.TelegramUser.username}\n`
                     )
                 }
             }
@@ -332,9 +330,10 @@ var checkUsers = new CronJob('0 0 */1 * * *', async function () {
             ]
         })
         users.forEach(async user => {
+            let telegramUsername = 'Нет в Телеграм'
             if (user.TelegramUser !== null) {
-                telegramUser = user.TelegramUser
-
+                let telegramUser = user.TelegramUser
+                telegramUsername = telegramUser.username || telegramUser.id
                 // Клуб тикток чат
                 // https://web.telegram.org/#/im?p=s1185920407_17777605011897856854 -1001185920407
 
@@ -352,7 +351,7 @@ var checkUsers = new CronJob('0 0 */1 * * *', async function () {
                 await telegram.kickChatMember(-1001198187467, telegramUser.telegramId)
                 await telegram.kickChatMember(-1001311987827, telegramUser.telegramId)
 
-                telegram.sendMessage(139253874,
+                await telegram.sendMessage(telegramUser.telegramId,
                     `Здравствуйте! \n\n`
                     + `У вас закончилась подписка в клуб.\n`
                     + `Будем рады видеть вас снова 🤗\n`
@@ -360,7 +359,7 @@ var checkUsers = new CronJob('0 0 */1 * * *', async function () {
                 )
             }
             else {
-                telegram.sendMessage(139253874,
+                await telegram.sendMessage(139253874,
                     `ОШИБКА! Пользователь не забанен! Не привязан телеграм!\n\n`
                     + `Email: ${user.email}\n`
                     + `Телеграм: @${telegramUser.username}\n`
@@ -370,11 +369,10 @@ var checkUsers = new CronJob('0 0 */1 * * *', async function () {
             const pay = user.Pays[0]
             pay.active = false
             await pay.save()
-
-            telegram.sendMessage(139253874,
+            await telegram.sendMessage(139253874,
                 `Пользователь исключён из клуба!\n\n`
                 + `Email: ${user.email}\n`
-                + `Телеграм: @${telegramUser ? telegramUser.username : "Нет в Телеграм"}\n`
+                + `Телеграм: @${telegramUsername}\n`
             )
         })
 
