@@ -41,7 +41,7 @@ const AlertDialog = ({ token }) => {
 
     if (alert) {
         return (
-            <Container className={classes.root} maxWidth="false">
+            <Container className={classes.root} maxWidth={false}>
                 <Alert
                     className={classes.alert}
                     severity={alert.type}
