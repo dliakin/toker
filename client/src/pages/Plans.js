@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Card, CardContent, Typography, CardActions, Button, makeStyles, Container, CardHeader, LinearProgress } from '@material-ui/core'
 import PlanApi from '../axios/plan'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom';
+import { logout } from '../redux/actions/userActions'
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Plans = ({ token }) => {
     const [plans, setPlans] = useState()
+    const dispatch = useDispatch()
     const classes = useStyles();
     let location = useLocation()
 
@@ -43,9 +45,11 @@ const Plans = ({ token }) => {
             }
             fetchData()
         } catch (error) {
-            //Ничего не делаем
+            if (error.response.data.error && error.response.data.error.name === 'TokenExpiredError') {
+                dispatch(logout())
+            }
         }
-    }, [location.search])
+    }, [location.search, dispatch])
 
     const clickPayHandler = async (id) => {
         const payload = await PlanApi.getPayUrl(id, new URLSearchParams(location.search), token)
