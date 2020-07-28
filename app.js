@@ -52,6 +52,38 @@ bot.command('get_code', (ctx) => {
 
 })
 
+// bot.command('test_unban', async (ctx) => {
+//     try {
+//         const chatMember = await telegram.getChatMember(-1001169559017, '324081786')
+//         if (chatMember.status !== 'member')
+//             await telegram.unbanChatMember(-1001169559017, '324081786')
+//     } catch (error) {
+//         console.log("Ошибка в боте. Команда get_code: ", error)
+//     }
+
+// })
+
+// bot.command('test_ban', async (ctx) => {
+//     try {
+//         const chatMember = await telegram.getChatMember(-1001169559017, '324081786')
+//         await telegram.kickChatMember(-1001169559017, '324081786')
+//     } catch (error) {
+//         console.log("Ошибка в боте. Команда get_code: ", error)
+//     }
+
+// })
+
+// bot.command('test_get', async (ctx) => {
+//     try {
+//         const chatMember = await telegram.getChatMember(-1001169559017, '324081786')
+//         console.log(chatMember)
+//         ctx.reply(chatMember)
+//     } catch (error) {
+//         console.log("Ошибка в боте. Команда get_code: ", error)
+//     }
+
+// })
+
 //TODO Банить тех, кого нет в БД
 // {
 //        message_id: 3208,
