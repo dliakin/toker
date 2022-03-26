@@ -1,0 +1,12 @@
+{
+    "port": 5000,
+    "jwtSecret": "",
+    "baseUrl": "http://localhost:5000",
+    "clientUrl": "http://localhost:3000",
+    "proxy": [
+
+    ],
+    "telegramToken": "",
+    "botName": "",
+    "tinkoffKey": ""
+}

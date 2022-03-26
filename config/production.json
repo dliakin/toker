@@ -1,0 +1,12 @@
+{
+    "port": 80,
+    "jwtSecret": "",
+    "baseUrl": "https://toker.team",
+    "clientUrl": "https://toker.team",
+    "proxy": [
+
+    ],
+    "telegramToken": "",
+    "botName": "",
+    "tinkoffKey": ""
+}

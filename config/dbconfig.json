@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "",
+    "password": "",
+    "database": "",
+    "host": "",
+    "port": "",
+    "supportBigNumbers": true,
+    "bigNumberStrings": true,
+    "charset": "utf8mb4",
+    "dialect": "mysql",
+    "logQueryParameters": true
+  },
+  "production": {
+    "username": "",
+    "password": "",
+    "database": "",
+    "host": "",
+    "port": "",
+    "supportBigNumbers": true,
+    "bigNumberStrings": true,
+    "charset": "utf8mb4",
+    "dialect": "mysql",
+    "logQueryParameters": true
+  }
+}
